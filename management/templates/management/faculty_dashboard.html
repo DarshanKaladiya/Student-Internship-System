@@ -1,0 +1,38 @@
+{% extends 'management/base.html' %}
+{% block content %}
+<h1 style="margin-bottom: 40px;">👨‍🏫 Faculty Approval Panel</h1>
+
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead style="background: #f1f5f9;">
+            <tr style="text-align: left;">
+                <th style="padding: 20px;">Student Name</th>
+                <th style="padding: 20px;">Internship</th>
+                <th style="padding: 20px;">Status</th>
+                <th style="padding: 20px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td style="padding: 20px; font-weight: 600;">{{ app.student.username }}</td>
+                <td style="padding: 20px;">{{ app.internship.title }}</td>
+                <td style="padding: 20px;">
+                    <span class="badge badge-{{ app.status|lower }}">{{ app.status }}</span>
+                </td>
+                <td style="padding: 20px; display: flex; gap: 10px;">
+                    <a href="{% url 'update_status' app.id 'Approved' %}" 
+                       style="background: var(--approved); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 700;">
+                       Approve
+                    </a>
+                    <a href="{% url 'update_status' app.id 'Rejected' %}" 
+                       style="background: var(--rejected); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 700;">
+                       Reject
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

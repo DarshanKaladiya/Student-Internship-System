@@ -1,0 +1,17 @@
+{% extends 'management/base.html' %}
+{% block content %}
+<h1 style="font-family: 'Poppins'; color: var(--primary);">💼 Internship Listings</h1>
+<div class="card-grid">
+    {% for i in internships %}
+    <div class="card">
+        <div style="background: var(--secondary); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-bottom: 15px;">
+            {{ i.company_name|slice:":1" }}
+        </div>
+        <h3 style="margin-top: 0;">{{ i.title }}</h3>
+        <p style="color: #64748b; font-size: 0.9rem;">{{ i.company_name }}</p>
+        <div style="margin: 20px 0; font-weight: 700; color: var(--primary);">{{ i.stipend }}</div>
+        <a href="{% url 'apply_internship' i.id %}" class="btn-primary" style="display: block; text-align: center; text-decoration: none;">Apply Now</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

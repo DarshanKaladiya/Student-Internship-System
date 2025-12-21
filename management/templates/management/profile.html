@@ -1,0 +1,27 @@
+{% extends 'management/base.html' %}
+{% block content %}
+<div class="section-card" style="display: flex; align-items: center; gap: 30px; margin-bottom: 30px;">
+    <div style="width: 100px; height: 100px; background: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.5rem; font-weight: 800;">
+        {{ user.username|slice:":1"|upper }}
+    </div>
+    <div style="flex: 1;">
+        <h1 style="margin: 0;">{{ profile.full_name|default:user.username }}</h1>
+        <div style="max-width: 300px; margin-top: 15px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700;">
+                <span style="color: #2563eb;">Profile Strength</span>
+                <span>{{ completion }}%</span>
+            </div>
+            <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 5px;">
+                <div style="width: {{ completion }}%; height: 100%; background: #2563eb; transition: width 0.5s ease;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section-card">
+    <h3>Academic Information</h3>
+    <p><strong>Roll Number:</strong> {{ profile.roll_no|default:"Not set" }}</p>
+    <p><strong>Department:</strong> {{ profile.department|default:"Not set" }}</p>
+    <p><strong>Semester:</strong> {{ profile.semester|default:"Not set" }}</p>
+</div>
+{% endblock %}

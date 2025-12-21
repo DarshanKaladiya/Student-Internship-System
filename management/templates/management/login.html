@@ -1,0 +1,20 @@
+{% extends 'management/base.html' %}
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+    <div class="card" style="width: 100%; max-width: 400px; padding: 40px;">
+        <h2 style="text-align: center; color: var(--primary); margin-bottom: 30px;">Login</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div style="margin-bottom: 20px;">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" style="width: 100%; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                Sign In
+            </button>
+        </form>
+        <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+            Don't have an account? <a href="{% url 'register' %}" style="color: var(--secondary); font-weight: 700;">Join Now</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

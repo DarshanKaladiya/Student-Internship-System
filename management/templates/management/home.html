@@ -1,0 +1,78 @@
+{% extends 'management/base.html' %}
+{% block content %}
+<div style="margin-bottom: 30px;">
+    <h1 style="font-family: 'Poppins'; color: var(--text-dark); margin: 0;">Dashboard</h1>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">{{ current_date|date:"l, d F Y" }}</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <span class="stat-label">Total Students</span>
+        <span class="stat-value">{{ total_students }}</span>
+        <div style="font-size: 0.8rem; color: var(--acadex-blue); font-weight: 600; margin-top: 5px;">Active in portal</div>
+    </div>
+    
+    <div class="stat-card">
+        <span class="stat-label">Internships</span>
+        <span class="stat-value">{{ total_internships }}</span>
+        <div style="font-size: 0.8rem; color: var(--success); font-weight: 600; margin-top: 5px;">↑ Available now</div>
+    </div>
+    
+    <div class="stat-card">
+        <span class="stat-label">Partner Companies</span>
+        <span class="stat-value">{{ total_companies }}</span>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">Hiring members</div>
+    </div>
+</div>
+
+<div class="dashboard-row">
+    
+    <div class="section-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="margin: 0; font-family: 'Poppins';">Live Opportunities</h3>
+            <a href="{% url 'internship_list' %}" style="color: var(--acadex-blue); text-decoration: none; font-weight: 600; font-size: 0.9rem;">View All</a>
+        </div>
+        
+        {% for internship in recent_listings %}
+        <div class="list-item">
+            <div class="initial-logo">
+                {{ internship.company_name|slice:":1" }}
+            </div>
+            <div style="flex: 1; margin-left: 15px;">
+                <div style="font-weight: 700; color: var(--text-dark);">{{ internship.title }}</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">{{ internship.company_name }}</div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-weight: 700; color: var(--success); font-size: 0.9rem;">{{ internship.stipend }}</div>
+                <a href="{% url 'internship_detail' internship.id %}" style="font-size: 0.8rem; color: var(--acadex-blue); text-decoration: none; font-weight: 600;">Details →</a>
+            </div>
+        </div>
+        {% empty %}
+        <p style="color: var(--text-muted); text-align: center; padding: 20px;">No internships available at the moment.</p>
+        {% endfor %}
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 30px;">
+        
+        <div class="quick-start-card">
+            <h3>Quick Start</h3>
+            <p style="font-size: 0.9rem; opacity: 0.9; line-height: 1.6; margin-bottom: 20px;">
+                Complete your profile and upload your resume to increase your chances of getting approved by faculty members.
+            </p>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'register' %}" class="btn-white">Create Account</a>
+            {% else %}
+                <a href="{% url 'student_dashboard' %}" class="btn-white">My Applications</a>
+            {% endif %}
+        </div>
+
+        <div class="section-card" style="padding: 20px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 10px; height: 10px; background: var(--success); border-radius: 50%;"></div>
+                <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-dark);">System Status</span>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 10px 0 0 20px;">All systems operational</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
