@@ -1,15 +1,41 @@
 {% extends 'management/base.html' %}
 {% block content %}
-<div style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
-    <div class="auth-card">
-        <h2 style="color: var(--primary); margin-bottom: 25px;">Register</h2>
-        <form method="POST">
+<div class="auth-wrapper">
+    <div class="auth-card {% if role == 'Faculty' %}faculty-theme{% else %}student-theme{% endif %}">
+        
+        <div class="role-icon-bg">
+            {% if role == 'Faculty' %}🛡️{% else %}🎓{% endif %}
+        </div>
+
+        <h2 style="margin: 0 0 10px 0; font-size: 1.8rem; font-weight: 800; color: #1e293b;">
+            {{ role }} Portal
+        </h2>
+        
+        <p style="color: #64748b; margin-bottom: 25px; font-size: 0.9rem; line-height: 1.5;">
+            {% if role == 'Faculty' %}
+                Join our academic network to manage talent.
+            {% else %}
+                Access premium internships and build your career.
+            {% endif %}
+        </p>
+
+        <form method="post" class="auth-form">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn-register">Register</button>
+            {% for field in form %}
+                <div style="text-align: left; margin-bottom: 10px;">
+                    <label style="font-weight: 600; font-size: 0.85rem; color: #475569;">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn-auth">
+                Create {{ role }} Account
+            </button>
         </form>
-        <p style="margin-top: 20px; font-size: 0.9rem; color: #64748b;">
-            Already have an account? <a href="{% url 'login' %}" style="color: var(--primary); font-weight: 600;">Login</a>
+
+        <p style="margin-top: 20px; font-size: 0.85rem; color: #64748b;">
+            Already have an account? 
+            <a href="{% url 'login' %}" style="text-decoration: none; font-weight: 700; color: #1e293b; border-bottom: 2px solid currentColor;">Login</a>
         </p>
     </div>
 </div>

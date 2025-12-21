@@ -1,11 +1,14 @@
 {% extends 'management/base.html' %}
 {% block content %}
-<div class="auth-card">
-    <h2 style="color: var(--primary);">Faculty Registration</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn-primary-full">Create Faculty Account</button>
-    </form>
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h2>Create Account</h2>
+        <p class="subtitle">Join the portal to start applying</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-primary">Register</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

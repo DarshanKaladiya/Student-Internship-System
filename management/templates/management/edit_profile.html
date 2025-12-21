@@ -1,0 +1,32 @@
+{% extends 'management/base.html' %}
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card" style="max-width: 500px;">
+        <h2>Update Your Profile</h2>
+        <p class="subtitle">Enter your academic details to complete your profile strength</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div style="margin-bottom: 20px; text-align: left;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark);">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div style="color: #ef4444; font-size: 0.8rem; margin-top: 5px;">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <div style="display: flex; gap: 10px; margin-top: 30px;">
+                <button type="submit" class="btn-primary" style="flex: 2;">Save Profile</button>
+                <a href="{% url 'student_profile' %}" class="nav-item" style="flex: 1; justify-content: center; border: 1px solid var(--border); background: var(--bg-main);">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

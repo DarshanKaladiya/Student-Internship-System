@@ -1,78 +1,41 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internly | Student Internship System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <title>Internly</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-
     <div class="sidebar">
         <a href="{% url 'home' %}" class="sidebar-brand">Internly</a>
-        
-        <nav>
-            <a href="{% url 'home' %}" class="nav-item">
-                <span>🏠</span> Dashboard
-            </a>
-            
-            <a href="{% url 'internship_list' %}" class="nav-item">
-                <span>💼</span> Internships
-            </a>
-
+        <nav style="flex: 1;">
+            <a href="{% url 'home' %}" class="nav-item"><span>🏠</span> Dashboard</a>
+            <a href="{% url 'internship_list' %}" class="nav-item"><span>💼</span> Internships</a>
             {% if user.is_authenticated %}
                 {% if user.userprofile.role == 'FACULTY' %}
-                    <a href="{% url 'faculty_dashboard' %}" class="nav-item">
-                        <span>👨‍🏫</span> Faculty Panel
-                    </a>
+                    <a href="{% url 'faculty_dashboard' %}" class="nav-item"><span>📊</span> Reviews</a>
                 {% else %}
-                    <a href="{% url 'student_dashboard' %}" class="nav-item">
-                        <span>📊</span> My Applications
-                    </a>
-                    <a href="{% url 'student_profile' %}" class="nav-item">
-                        <span>👤</span> Profile
-                    </a>
+                    <a href="{% url 'student_dashboard' %}" class="nav-item"><span>📋</span> My Applied</a>
                 {% endif %}
-                
-                <a href="{% url 'logout' %}" class="nav-item logout-link" style="margin-top: auto; color: #ef4444;">
-                    <span>🚪</span> Logout
-                </a>
-            {% else %}
-                <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
-                <a href="{% url 'login' %}" class="nav-item">Login</a>
-                <a href="{% url 'register' %}" class="nav-item">Student Sign-Up</a>
-                
-                <a href="{% url 'faculty_register' %}" class="nav-item hire-btn">
-                    Hire Interns
-                </a>
             {% endif %}
         </nav>
-    </div>
-
-    <div class="main-content">
-        <header class="top-header">
-            <div class="search-bar">🔍 Search opportunities...</div>
-            
-            {% if user.is_authenticated %}
-                <div class="user-profile-header">
-                    <div class="user-info">
-                        <div class="username">{{ user.username }}</div>
-                        <div class="user-role">{{ user.userprofile.role }}</div>
-                    </div>
-                    <div class="user-avatar">
-                        {{ user.username|slice:":1"|upper }}
-                    </div>
-                </div>
+        <div class="sidebar-footer">
+            {% if not user.is_authenticated %}
+                <a href="{% url 'login' %}?role=Student" class="nav-item"><span>🔑</span> Student Login</a>
+                <a href="{% url 'login' %}?role=Faculty" class="nav-item" style="color: #059669;"><span>🛡️</span> Faculty Login</a>
+                <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 10px 0;">
+                <a href="{% url 'register' %}" class="nav-item"><span>👨‍🎓</span> Student Join</a>
+                <a href="{% url 'faculty_register' %}" class="nav-item" style="color: #059669;"><span>🎓</span> Faculty Join</a>
             {% else %}
-                <a href="{% url 'login' %}" class="signin-link">Sign In</a>
+                <a href="{% url 'logout' %}" class="nav-item" style="color: #dc2626;"><span>🚪</span> Logout</a>
             {% endif %}
-        </header>
-
-        {% block content %}
-        {% endblock %}
+        </div>
     </div>
-
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

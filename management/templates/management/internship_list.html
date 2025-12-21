@@ -1,16 +1,40 @@
 {% extends 'management/base.html' %}
 {% block content %}
-<h1 style="font-family: 'Poppins'; color: var(--primary);">💼 Internship Listings</h1>
-<div class="card-grid">
-    {% for i in internships %}
-    <div class="card">
-        <div style="background: var(--secondary); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-bottom: 15px;">
-            {{ i.company_name|slice:":1" }}
+<div class="dashboard-header" style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="font-family: 'Poppins', sans-serif; font-weight: 800; margin: 0;">Internships</h1>
+        <p style="color: var(--text-muted);">Discover your next career move</p>
+    </div>
+    
+    <div style="position: relative; width: 300px;">
+        <input type="text" placeholder="Search opportunities..." style="width: 100%; padding: 12px 20px 12px 45px; border-radius: 12px; border: 1px solid var(--border); background: var(--white);">
+        <span style="position: absolute; left: 15px; top: 12px;">🔍</span>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+    {% for internship in internships %}
+    <div class="section-card" style="transition: transform 0.2s; cursor: pointer;" onclick="location.href='{% url 'internship_detail' internship.id %}'">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+            <div style="width: 45px; height: 45px; background: var(--primary-light); color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem;">
+                {{ internship.company_name|slice:":1" }}
+            </div>
+            <span style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">
+                {{ internship.stipend }}
+            </span>
         </div>
-        <h3 style="margin-top: 0;">{{ i.title }}</h3>
-        <p style="color: #64748b; font-size: 0.9rem;">{{ i.company_name }}</p>
-        <div style="margin: 20px 0; font-weight: 700; color: var(--primary);">{{ i.stipend }}</div>
-        <a href="{% url 'apply_internship' i.id %}" class="btn-primary" style="display: block; text-align: center; text-decoration: none;">Apply Now</a>
+        
+        <h3 style="margin: 0 0 5px 0; font-size: 1.1rem;">{{ internship.title }}</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">{{ internship.company_name }} • {{ internship.location }}</p>
+        
+        <div style="border-top: 1px solid var(--border); padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Posted {{ internship.posted_date|timesince }} ago</span>
+            <a href="{% url 'internship_detail' internship.id %}" style="color: var(--primary); text-decoration: none; font-weight: 700; font-size: 0.9rem;">Details →</a>
+        </div>
+    </div>
+    {% empty %}
+    <div style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+        <p style="color: var(--text-muted);">No internships available at the moment.</p>
     </div>
     {% endfor %}
 </div>

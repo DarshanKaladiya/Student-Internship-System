@@ -1,0 +1,30 @@
+{% extends 'management/base.html' %}
+{% block content %}
+<div class="dashboard-wrapper">
+    <h2>Student Dashboard</h2>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Applied Internships</h3>
+            <p class="value">{{ applications.count }}</p>
+        </div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Internship</th>
+                <th>Applied On</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td>{{ app.internship.title }}</td>
+                <td>{{ app.applied_on|date:"d M Y" }}</td>
+                <td><span class="badge {{ app.status|lower }}">{{ app.status }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,46 +1,26 @@
 {% extends 'management/base.html' %}
 {% block content %}
-<div style="max-width: 850px; margin: 0 auto;">
-    <a href="{% url 'internship_list' %}" style="text-decoration: none; color: var(--secondary); font-weight: 600; display: inline-block; margin-bottom: 20px;">
-        ← Back to Listings
-    </a>
+<div style="max-width: 800px; margin: 0 auto;">
+    <a href="{% url 'internship_list' %}" style="text-decoration: none; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 20px;">← Back to listings</a>
     
-    <div class="card" style="padding: 40px; border-radius: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px;">
+    <div class="section-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
             <div>
-                <span class="card-badge">{{ internship.company_name }}</span>
-                <h1 style="margin: 10px 0; font-size: 2.2rem;">{{ internship.title }}</h1>
+                <h1 style="margin: 0; font-family: 'Poppins'; font-weight: 800;">{{ internship.title }}</h1>
+                <p style="font-size: 1.2rem; color: var(--primary); font-weight: 600;">{{ internship.company_name }}</p>
             </div>
-            <div style="background: #f1f5f9; padding: 15px 25px; border-radius: 12px; text-align: center;">
-                <div style="font-size: 0.8rem; color: #64748b; font-weight: 700;">STIPEND</div>
-                <div style="font-weight: 800; color: var(--primary); font-size: 1.3rem;">{{ internship.stipend }}</div>
-            </div>
+            <a href="{% url 'apply_internship' internship.id %}" class="btn-primary" style="width: auto; padding: 12px 30px;">Apply Now</a>
         </div>
 
-        <div style="line-height: 1.8; color: #475569; font-size: 1.1rem;">
-            <h3 style="margin-bottom: 15px;">Role Description</h3>
-            <p>{{ internship.description }}</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; padding: 20px; background: var(--bg-main); border-radius: 15px;">
+            <div><strong>Location:</strong> {{ internship.location }}</div>
+            <div><strong>Stipend:</strong> {{ internship.stipend }}</div>
+            <div><strong>Posted On:</strong> {{ internship.posted_date|date:"F d, Y" }}</div>
+            <div><strong>Required Skills:</strong> {{ internship.required_skills }}</div>
         </div>
 
-        <div style="margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 30px;">
-            {% if user.is_authenticated %}
-                {% if user.userprofile.role == 'STUDENT' %}
-                    <form action="{% url 'apply_internship' internship.id %}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-primary-full" style="background: #16a34a; font-size: 1.1rem;">
-                            Apply for this Intern Position
-                        </button>
-                    </form>
-                {% else %}
-                    <p style="color: #64748b; font-style: italic;">Note: Faculty accounts cannot apply for internships.</p>
-                {% endif %}
-            {% else %}
-                <div style="text-align: center;">
-                    <p style="margin-bottom: 20px; color: #64748b;">Ready to apply? Log in to your student account first.</p>
-                    <a href="{% url 'login' %}" class="btn-primary-full" style="text-decoration: none; display: block;">Login to Apply</a>
-                </div>
-            {% endif %}
-        </div>
+        <h3>Description</h3>
+        <p style="line-height: 1.6; color: var(--text-dark);">{{ internship.description }}</p>
     </div>
 </div>
 {% endblock %}

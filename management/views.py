@@ -2,34 +2,27 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
-from .models import Internship, Application, UserProfile
+from .models import UserProfile, Application, Internship
+from django.contrib import messages
 
-# --- Home & Auth ---
 def home_landing(request):
-    context = {
-        'total_internships': Internship.objects.count(),
-        'total_students': UserProfile.objects.filter(role='STUDENT').count(),
-        'total_companies': Internship.objects.values('company_name').distinct().count(),
-        'recent_listings': Internship.objects.all().order_by('-posted_date')[:4],
-        'current_date': timezone.now(),
-    }
-    return render(request, 'management/home.html', context)
+    # FIXED: Replaced 'created_at' with 'posted_date'
+    internships = Internship.objects.all().order_by('-posted_date')[:4]
+    return render(request, 'management/home.html', {'internships': internships})
 
 def login_view(request):
+    role = request.GET.get('role', 'Student')
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            # FIXED: Ensure profile exists
-            UserProfile.objects.get_or_create(user=user, defaults={'role': 'STUDENT'})
-            return redirect('home')
-    return render(request, 'management/login.html', {'form': AuthenticationForm()})
-
-def logout_view(request):
-    logout(request)
-    return redirect('login')
+            if hasattr(user, 'userprofile') and user.userprofile.role == 'FACULTY':
+                return redirect('faculty_dashboard')
+            return redirect('student_dashboard')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'management/login.html', {'form': form, 'role': role})
 
 def register_view(request):
     if request.method == 'POST':
@@ -38,60 +31,51 @@ def register_view(request):
             user = form.save()
             UserProfile.objects.get_or_create(user=user, defaults={'role': 'STUDENT'})
             login(request, user)
-            return redirect('home')
-    return render(request, 'management/register.html', {'form': UserCreationForm()})
+            return redirect('student_dashboard')
+    return render(request, 'management/register.html', {'form': UserCreationForm(), 'role': 'Student'})
 
 def faculty_register_view(request):
-    # Your registration logic here
-    return render(request, 'management/faculty_register.html')
-
-# --- Profile Logic ---
-@login_required
-def student_profile(request):
-    # FIXED: Automatically creates profile if missing
-    profile, created = UserProfile.objects.get_or_create(user=request.user, defaults={'role': 'STUDENT'})
-    
-    # Progress bar logic using new fields
-    fields = [profile.full_name, profile.roll_no, profile.department, profile.semester, profile.skills]
-    filled = [f for f in fields if f and f != ""]
-    completion = int((len(filled) / len(fields)) * 100) if fields else 0
-    
-    return render(request, 'management/profile.html', {
-        'profile': profile, 
-        'completion': completion
-    })
-
-# --- Internship Ops ---
-def internship_list(request):
-    internships = Internship.objects.all().order_by('-posted_date')
-    return render(request, 'management/internship_list.html', {'internships': internships})
-
-def internship_detail(request, internship_id):
-    internship = get_object_or_404(Internship, id=internship_id)
-    return render(request, 'management/internship_detail.html', {'internship': internship})
-
-@login_required
-def apply_internship(request, internship_id):
-    internship = get_object_or_404(Internship, id=internship_id)
-    Application.objects.get_or_create(student=request.user, internship=internship)
-    return redirect('student_dashboard')
-
-# --- Dashboards ---
-@login_required
-def student_dashboard(request):
-    # FIXED: Use 'applied_on' field
-    apps = Application.objects.filter(student=request.user).order_by('-applied_on')
-    return render(request, 'management/dashboard.html', {'applications': apps})
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            UserProfile.objects.get_or_create(user=user, defaults={'role': 'FACULTY'})
+            login(request, user)
+            return redirect('faculty_dashboard')
+    return render(request, 'management/register.html', {'form': UserCreationForm(), 'role': 'Faculty'})
 
 @login_required
 def faculty_dashboard(request):
-    # FIXED: Use 'applied_on' field
-    apps = Application.objects.all().order_by('-applied_on')
+    # FIXED: Querying specifically through the internship relation to avoid ValueError
+    if request.user.userprofile.role != 'FACULTY':
+        return redirect('home')
+    apps = Application.objects.filter(internship__faculty=request.user)
     return render(request, 'management/faculty_dashboard.html', {'applications': apps})
 
+# ADDED: This function resolves the AttributeError shown in your terminal
 @login_required
 def update_status(request, app_id, new_status):
     application = get_object_or_404(Application, id=app_id)
     application.status = new_status
     application.save()
+    messages.success(request, f"Application marked as {new_status}")
     return redirect('faculty_dashboard')
+
+@login_required
+def student_dashboard(request):
+    # Ensure you have student_dashboard.html in templates/management/
+    apps = Application.objects.filter(student=request.user).order_by('-applied_on')
+    return render(request, 'management/student_dashboard.html', {'applications': apps})
+
+def internship_list(request):
+    # FIXED: Resolves NoReverseMatch for internship_detail
+    jobs = Internship.objects.all().order_by('-posted_date')
+    return render(request, 'management/internship_list.html', {'internships': jobs})
+
+def internship_detail(request, pk):
+    job = get_object_or_404(Internship, pk=pk)
+    return render(request, 'management/internship_detail.html', {'internship': job})
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
