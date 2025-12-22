@@ -1,33 +1,59 @@
 {% extends 'management/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="header-area">
-    <h1>Available Internships</h1>
-    <p>Browse and apply for the latest opportunities from our faculty network.</p>
+<div class="header-area" style="margin-bottom: 60px;">
+    <h1 style="font-size: 3.5rem; font-weight: 900; color: white; letter-spacing: -2px;">
+        Market <span style="color: var(--primary);">Intelligence</span>
+    </h1>
+    <p style="font-size: 1.1rem; opacity: 0.8; max-width: 600px;">
+        Discover high-impact opportunities within our faculty-led ecosystem. Analyze and initialize your application.
+    </p>
 </div>
 
-<div class="opportunity-grid">
+<div class="opportunity-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px;">
     {% for internship in internships %}
-    <div class="job-card">
-        <div class="job-header">
-            <span class="company-tag">
-                <span class="faculty-icon">🏫</span> Faculty Lead
-            </span>
-            <span class="status-badge">Active</span>
-        </div>
-        
-        <h3 class="job-title">{{ internship.title }}</h3>
-        <p class="job-desc">{{ internship.description|truncatewords:20 }}</p>
-        
-        <div class="job-footer">
-            <div class="job-meta">
-                <span>📅 Posted: {{ internship.posted_date|date:"M d, Y" }}</span>
+    <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between; border-left: 4px solid var(--primary);">
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                <span style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 6px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
+                    🏫 {{ internship.faculty.get_full_name|default:"Faculty Lead" }}
+                </span>
+                <span style="color: #10b981; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 5px;">
+                    <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block;"></span> LIVE
+                </span>
             </div>
-            <a href="{% url 'internship_detail' internship.pk %}" class="view-details-link">View Details</a>
+
+            <h3 style="color: white; font-size: 1.6rem; font-weight: 800; margin-bottom: 12px; line-height: 1.2;">
+                {{ internship.title }}
+            </h3>
+            
+            <p style="color: var(--text-body); font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px;">
+                {{ internship.description|truncatewords:20 }}
+            </p>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px;">
+                <div style="background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 8px; font-size: 0.8rem;">
+                    📍 {{ internship.location|default:"Remote" }}
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 8px; font-size: 0.8rem;">
+                    💰 {{ internship.stipend|default:"Unpaid" }}
+                </div>
+            </div>
+        </div>
+
+        <div style="padding-top: 20px; border-top: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.75rem; color: #64748b; font-weight: 600;">
+                Posted {{ internship.posted_date|date:"M d, Y" }}
+            </span>
+            <a href="{% url 'internship_detail' internship.pk %}" class="btn-primary" style="padding: 10px 24px; font-size: 0.85rem; text-decoration: none;">
+                Details →
+            </a>
         </div>
     </div>
     {% empty %}
-    <div class="empty-state-container">
-        <p>No internships are currently available. Please check back later.</p>
+    <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 80px;">
+        <h3 style="color: white;">No active opportunities available.</h3>
     </div>
     {% endfor %}
 </div>

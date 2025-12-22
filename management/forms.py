@@ -1,10 +1,9 @@
 from django import forms
-from .models import UserProfile, Internship
+from .models import UserProfile, Internship, Application
 
 class ProfileUpdateForm(forms.ModelForm):
     """
     Form for students to update their academic details.
-    Resolves the missing attribute errors for full_name and roll_no.
     """
     class Meta:
         model = UserProfile
@@ -19,7 +18,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
 class InternshipForm(forms.ModelForm):
     """
-    Form for faculty to post new internships.
+    Form for faculty to post new internships based on your specific model fields.
     """
     class Meta:
         model = Internship

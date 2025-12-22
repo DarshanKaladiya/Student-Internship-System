@@ -1,46 +1,39 @@
 {% extends 'management/base.html' %}
+{% load static %}
+
 {% block content %}
 <div class="auth-wrapper">
-    <div class="auth-card {% if role == 'Faculty' %}faculty-theme{% else %}student-theme{% endif %}">
-        
-        <div class="role-icon-container">
-            {% if role == 'Faculty' %}
-                <img src="https://cdn-icons-png.flaticon.com/512/3233/3233481.png" class="role-icon-img" alt="Faculty">
-            {% else %}
-                <img src="https://cdn-icons-png.flaticon.com/512/354/354637.png" class="role-icon-img" alt="Student">
-            {% endif %}
+    <div class="glass-card auth-card">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h1 style="color: white; font-size: 2.2rem; font-weight: 900;">
+                {{ role }} <span style="color: var(--primary);">Login</span>
+            </h1>
+            <p style="margin-top: 10px; font-size: 0.9rem;">Authenticate to access the ecosystem.</p>
         </div>
 
-        <h2>{{ role }} Login</h2>
-        <p style="color: #64748b; margin-bottom: 25px;">Welcome back to the portal.</p>
-
-        <form method="post" class="auth-form">
+        <form method="POST" action="{% url 'login' %}?role={{ role }}">
             {% csrf_token %}
-            {% for field in form %}
-                <div style="text-align: left; margin-bottom: 15px;">
-                    <label style="font-weight: 600; font-size: 0.9rem;">{{ field.label }}</label>
-                    {{ field }}
-                </div>
-            {% endfor %}
-            <button type="submit" class="btn-auth">Login as {{ role }}</button>
+            
+            <div class="form-group">
+                <label>Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="form-group">
+                <label>Security Key (Password)</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">
+                INITIALIZE SYNC
+            </button>
         </form>
+
+        <div style="text-align: center; margin-top: 35px; border-top: 1px solid var(--glass-border); padding-top: 25px;">
+            <p style="font-size: 0.85rem;">Need a node? 
+                <a href="{% url 'register' %}" style="color: var(--primary); font-weight: 700; text-decoration: none;">Register Identity</a>
+            </p>
+        </div>
     </div>
 </div>
-
-<style>
-    /* CSS to fix the logo overflow from image_b32a84.png */
-    .role-icon-container {
-        width: 100px;
-        height: 100px;
-        margin: 0 auto 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .role-icon-img {
-        max-width: 100%;
-        height: auto;
-        object-fit: contain;
-    }
-</style>
 {% endblock %}

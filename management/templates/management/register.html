@@ -1,42 +1,80 @@
 {% extends 'management/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="auth-wrapper">
-    <div class="auth-card {% if role == 'Faculty' %}faculty-theme{% else %}student-theme{% endif %}">
+<div class="auth-wrapper" style="display: flex; justify-content: center; align-items: center; min-height: 85vh;">
+    
+    <div class="glass-card" style="width: 100%; max-width: 550px; padding: 48px;">
         
-        <div class="role-icon-bg">
-            {% if role == 'Faculty' %}🛡️{% else %}🎓{% endif %}
+        <div class="auth-header" style="text-align: center; margin-bottom: 40px;">
+            <div class="logo-accent" style="margin: 0 auto 20px; width: 60px; height: 60px; font-size: 1.5rem;">
+                {% if role == "Faculty" %}💼{% else %}👨‍🎓{% endif %}
+            </div>
+            <h2 style="font-size: 2.25rem; font-weight: 900; color: white; margin-bottom: 10px;">
+                Join the <span style="color: var(--primary);">Network</span>
+            </h2>
+            <p style="color: var(--text-body); font-size: 1rem; opacity: 0.8;">
+                Create your {{ role }} profile to access the Internly ecosystem.
+            </p>
         </div>
 
-        <h2 style="margin: 0 0 10px 0; font-size: 1.8rem; font-weight: 800; color: #1e293b;">
-            {{ role }} Portal
-        </h2>
-        
-        <p style="color: #64748b; margin-bottom: 25px; font-size: 0.9rem; line-height: 1.5;">
-            {% if role == 'Faculty' %}
-                Join our academic network to manage talent.
-            {% else %}
-                Access premium internships and build your career.
-            {% endif %}
-        </p>
-
-        <form method="post" class="auth-form">
+        <form method="POST" class="auth-form">
             {% csrf_token %}
+            
             {% for field in form %}
-                <div style="text-align: left; margin-bottom: 10px;">
-                    <label style="font-weight: 600; font-size: 0.85rem; color: #475569;">{{ field.label }}</label>
-                    {{ field }}
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 800; color: var(--secondary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">
+                        {{ field.label }}
+                    </label>
+                    
+                    <div class="input-container">
+                        {{ field }}
+                    </div>
+
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <small style="color: var(--secondary); font-size: 0.75rem; margin-top: 5px; display: block;">{{ error }}</small>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {% if field.help_text %}
+                        <small style="display: block; color: #64748b; font-size: 0.7rem; margin-top: 6px; line-height: 1.4;">
+                            {{ field.help_text|safe }}
+                        </small>
+                    {% endif %}
                 </div>
             {% endfor %}
-            
-            <button type="submit" class="btn-auth">
-                Create {{ role }} Account
+
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 18px; font-size: 1.1rem; margin-top: 20px;">
+                Initialize {{ role }} Account
             </button>
         </form>
 
-        <p style="margin-top: 20px; font-size: 0.85rem; color: #64748b;">
-            Already have an account? 
-            <a href="{% url 'login' %}" style="text-decoration: none; font-weight: 700; color: #1e293b; border-bottom: 2px solid currentColor;">Login</a>
-        </p>
+        <div style="margin-top: 32px; text-align: center; font-size: 0.95rem;">
+            <span style="opacity: 0.7;">Already authenticated?</span>
+            <a href="{% url 'login' %}?role={{ role }}" style="color: var(--primary); text-decoration: none; font-weight: 800; margin-left: 8px; transition: 0.2s;">
+                Sign In →
+            </a>
+        </div>
     </div>
 </div>
+
+<style>
+    /* Targeting Django's default form inputs to match the glass style */
+    input {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid var(--glass-border) !important;
+        padding: 16px !important;
+        border-radius: 14px !important;
+        color: white !important;
+        width: 100% !important;
+        transition: 0.3s !important;
+    }
+    input:focus {
+        outline: none !important;
+        border-color: var(--primary) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.2) !important;
+    }
+</style>
 {% endblock %}

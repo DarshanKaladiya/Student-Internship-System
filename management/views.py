@@ -1,125 +1,123 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile, Application, Internship
 from django.contrib import messages
+from .models import Internship, Application, UserProfile
+from .forms import InternshipForm, ProfileUpdateForm
 
-# --- LANDING & LISTINGS ---
+# --- Systems Intelligence View ---
 def home_landing(request):
-    """Uses 'posted_date' to resolve FieldError."""
-    internships = Internship.objects.all().order_by('-posted_date')[:4]
-    return render(request, 'management/home.html', {'internships': internships})
+    """Provides system stats for the glassmorphism landing page."""
+    context = {
+        'total_students': UserProfile.objects.filter(role='STUDENT').count(),
+        'available_internships': Internship.objects.count(),
+        'recent_internships': Internship.objects.all().order_by('-posted_date')[:3]
+    }
+    return render(request, 'management/home.html', context)
 
-def internship_list(request):
-    jobs = Internship.objects.all().order_by('-posted_date')
-    return render(request, 'management/internship_list.html', {'internships': jobs})
+# --- Authentication Module ---
+def student_register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            UserProfile.objects.get_or_create(user=user, role='STUDENT')
+            login(request, user)
+            return redirect('student_dashboard')
+    else:
+        form = UserCreationForm()
+    return render(request, 'management/register.html', {'form': form, 'role': 'Student'})
 
-def internship_detail(request, pk):
-    job = get_object_or_404(Internship, pk=pk)
-    return render(request, 'management/internship_detail.html', {'internship': job})
+def faculty_register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            UserProfile.objects.get_or_create(user=user, role='FACULTY')
+            login(request, user)
+            return redirect('faculty_dashboard')
+    else:
+        form = UserCreationForm()
+    return render(request, 'management/register.html', {'form': form, 'role': 'Faculty'})
 
-# --- AUTHENTICATION WITH ROLE VALIDATION ---
 def login_view(request):
-    """Strict role-based login with custom alert messages."""
-    role_required = request.GET.get('role', 'Student').upper() 
-    
+    target_role = request.GET.get('role', 'Student') 
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-
-            if user is not None:
-                try:
-                    profile = user.userprofile
-                    if profile.role == role_required:
-                        login(request, user)
-                        messages.success(request, f"Welcome back, {username}!")
-                        return redirect('faculty_dashboard' if profile.role == 'FACULTY' else 'student_dashboard')
-                    else:
-                        # Alert: Wrong role trying to access this portal
-                        messages.error(request, f"Access Denied: You are a {profile.role.capitalize()}. Please use the {profile.role.capitalize()} Login.")
-                except UserProfile.DoesNotExist:
-                    messages.error(request, "Error: Profile not found.")
-        else:
-            # Alert: Incorrect credentials
-            messages.error(request, "Invalid username or password.")
-    else:
-        form = AuthenticationForm()
-
-    return render(request, 'management/login.html', {'form': form, 'role': role_required.capitalize()})
-
-def register_view(request):
-    """Student Registration."""
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            UserProfile.objects.get_or_create(user=user, defaults={'role': 'STUDENT'})
+            user = form.get_user()
             login(request, user)
-            return redirect('student_dashboard')
-    return render(request, 'management/register.html', {'form': UserCreationForm(), 'role': 'Student'})
+            return redirect('faculty_dashboard' if user.userprofile.role == 'FACULTY' else 'student_dashboard')
+    return render(request, 'management/login.html', {'form': AuthenticationForm(), 'role': target_role})
 
-def faculty_register_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            UserProfile.objects.get_or_create(user=user, defaults={'role': 'FACULTY'})
-            login(request, user)
-            return redirect('faculty_dashboard')
-    return render(request, 'management/register.html', {'form': UserCreationForm(), 'role': 'Faculty'})
-
-def logout_view(request):
-    logout(request)
-    return redirect('home')
-
-# --- PROFILE & PORTALS ---
+# --- Profile Management ---
 @login_required
 def student_profile(request):
-    profile = get_object_or_404(UserProfile, user=request.user)
-    return render(request, 'management/profile.html', {'profile': profile})
-
-@login_required
-def edit_profile(request):
-    """Resolves IntegrityError by handling NULL skills."""
-    profile = get_object_or_404(UserProfile, user=request.user)
+    profile = request.user.userprofile
     if request.method == 'POST':
-        profile.full_name = request.POST.get('full_name', '')
-        profile.roll_no = request.POST.get('roll_no', '')
-        profile.department = request.POST.get('department', '')
-        profile.skills = request.POST.get('skills', '') 
-        profile.save()
-        messages.success(request, "Profile updated!")
-        return redirect('student_profile')
-    return render(request, 'management/edit_profile.html', {'profile': profile})
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Identity node synchronized.")
+            return redirect('student_dashboard')
+    else:
+        form = ProfileUpdateForm(instance=profile)
+    return render(request, 'management/student_profile.html', {'form': form})
 
+# --- Faculty Control Logic ---
 @login_required
 def faculty_dashboard(request):
-    """Queries applications via User instance."""
-    if not hasattr(request.user, 'userprofile') or request.user.userprofile.role != 'FACULTY':
-        return redirect('home')
-    apps = Application.objects.filter(internship__faculty=request.user)
-    return render(request, 'management/faculty_dashboard.html', {'applications': apps})
+    internships = Internship.objects.filter(faculty=request.user)
+    pending_applications = Application.objects.filter(internship__faculty=request.user, status='PENDING')
+    return render(request, 'management/faculty_dashboard.html', {
+        'internships': internships, 
+        'pending_applications': pending_applications
+    })
 
 @login_required
-def update_status(request, app_id, new_status):
-    """Resolves AttributeError in terminal."""
-    application = get_object_or_404(Application, id=app_id)
-    application.status = new_status
-    application.save()
+def post_internship(request):
+    if request.method == 'POST':
+        form = InternshipForm(request.POST)
+        if form.is_valid():
+            intern = form.save(commit=False)
+            intern.faculty = request.user
+            intern.save()
+            return redirect('faculty_dashboard')
+    return render(request, 'management/post_internship.html', {'form': InternshipForm()})
+
+# FIXED: Added missing review_application view
+@login_required
+def review_application(request, pk, status):
+    """Processes faculty decisions on student applications."""
+    app = get_object_or_404(Application, pk=pk, internship__faculty=request.user)
+    if status in ['APPROVED', 'REJECTED']:
+        app.status = status
+        app.save()
+        messages.success(request, f"Application status updated to {status}.")
     return redirect('faculty_dashboard')
+
+# --- Student & Marketplace Logic ---
+def internship_list(request):
+    internships = Internship.objects.all().order_by('-posted_date')
+    return render(request, 'management/internship_list.html', {'internships': internships})
+
+def internship_detail(request, pk):
+    internship = get_object_or_404(Internship, pk=pk)
+    return render(request, 'management/internship_detail.html', {'internship': internship})
 
 @login_required
 def student_dashboard(request):
-    apps = Application.objects.filter(student=request.user).order_by('-applied_on')
+    apps = Application.objects.filter(student=request.user)
     return render(request, 'management/student_dashboard.html', {'applications': apps})
 
 @login_required
 def apply_internship(request, pk):
     internship = get_object_or_404(Internship, pk=pk)
-    if not Application.objects.filter(student=request.user, internship=internship).exists():
-        Application.objects.create(student=request.user, internship=internship)
+    Application.objects.get_or_create(student=request.user, internship=internship)
+    messages.success(request, "Signal transmitted.")
     return redirect('student_dashboard')
+
+def logout_user(request):
+    logout(request)
+    return redirect('home')

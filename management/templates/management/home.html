@@ -1,50 +1,34 @@
 {% extends 'management/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="dashboard-header">
-    <h1>Dashboard</h1>
-    <p>Welcome to Internly. Here is the current system overview.</p>
+<div class="header-area" style="margin-bottom: 60px;">
+    <h1 style="font-size: 3.8rem; font-weight: 900; color: white; letter-spacing: -2.5px; line-height: 1.1;">
+        Systems <span style="color: var(--primary);">Intelligence</span>
+    </h1>
+    <p style="font-size: 1.2rem; opacity: 0.8; margin-top: 15px;">Monitor real-time institutional metrics and explore active internship nodes.</p>
 </div>
 
-<div class="stats-grid">
-    <div class="stat-card">
-        <h3>Total Students</h3>
-        <p class="stat-value">240</p>
-        <span class="stat-label">Active in portal</span>
-    </div>
+<h2 style="margin-bottom: 35px; color: white; font-weight: 800; display: flex; align-items: center; gap: 15px;">
+    Live Nodes <div style="height: 1px; flex-grow: 1; background: var(--glass-border);"></div>
+</h2>
 
-    <div class="stat-card">
-        <h3>Internships</h3>
-        <p class="stat-value">{{ internships|length }}</p>
-        <span class="stat-label">↑ Available now</span>
+<div class="nodes-container">
+    {% for internship in recent_internships %}
+    <div class="glass-card card-flex">
+        <div style="flex: 1;">
+            <span style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 4px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;">Node Opportunity 🏰</span>
+            <h3 style="color: white; font-size: 1.8rem; font-weight: 800; margin: 12px 0;">{{ internship.title }}</h3>
+            <p style="line-height: 1.7; max-width: 650px;">{{ internship.description|truncatewords:25 }}</p>
+        </div>
+        <a href="{% url 'internship_detail' internship.pk %}" class="btn-primary">
+            ANALYZE NODE →
+        </a>
     </div>
-
-    <div class="stat-card">
-        <h3>Partner Companies</h3>
-        <p class="stat-value">12</p>
-        <span class="stat-label">Hiring members</span>
+    {% empty %}
+    <div class="glass-card" style="text-align: center; padding: 80px; border-style: dashed; opacity: 0.7;">
+        <h3 style="color: white;">No active transmissions detected.</h3>
     </div>
-</div>
-
-<div class="dashboard-section" style="margin-top: 40px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2>Live Opportunities</h2>
-        <a href="{% url 'internship_list' %}" class="view-all-link">View All</a>
-    </div>
-
-    <div class="opportunity-list">
-        {% for internship in internships %}
-            <div class="job-card" style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
-                <h3>{{ internship.title }}</h3>
-                <p>{{ internship.description|truncatewords:20 }}</p>
-                <a href="{% url 'internship_detail' internship.pk %}" style="color: var(--primary); font-weight: 600;">Details →</a>
-            </div>
-        {% empty %}
-            <p style="color: var(--text-muted); text-align: center; padding: 40px;">No internships available at the moment.</p>
-        {% endfor %}
-    </div>
-</div>
-
-<div class="system-status" style="margin-top: 40px; padding: 20px; background: #f1f5f9; border-radius: 12px;">
-    <p><strong>System Status:</strong> <span style="color: #10b981;">●</span> All systems operational</p>
+    {% endfor %}
 </div>
 {% endblock %}

@@ -3,51 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internly - Professional Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Internly | Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
+    {% if messages %}
+    <div class="message-container" id="alert-box">
+        {% for message in messages %}
+        <div class="glass-alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+            <div class="alert-icon">{% if message.tags == 'error' %}⚠️{% else %}✓{% endif %}</div>
+            <div class="alert-content">
+                <h4>SYSTEM SIGNAL</h4>
+                <p>{{ message }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-    <div class="sidebar">
-        <a href="{% url 'home' %}" class="logo-text">
-            <div class="logo-accent">I</div> Internly
-        </a>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <a href="{% url 'home' %}" class="brand-link">
+                <div class="brand-icon">
+                    <span class="icon-inner">I</span>
+                    <div class="icon-glow"></div>
+                </div>
+                <span class="brand-text">Internly</span>
+            </a>
+        </div>
 
         <nav>
-            <a href="{% url 'home' %}" class="nav-item"><span>🏠</span> Dashboard</a>
-            <a href="{% url 'internship_list' %}" class="nav-item"><span>💼</span> Internships</a>
+            <a href="{% url 'home' %}" class="nav-item">Dashboard</a>
+            <a href="{% url 'internship_list' %}" class="nav-item">Internships</a>
 
             {% if user.is_authenticated %}
-                <div class="sidebar-section-label">Portal</div>
+                <div class="sidebar-section-label">Workspace</div>
                 {% if user.userprofile.role == 'STUDENT' %}
-                    <a href="{% url 'student_dashboard' %}" class="nav-item"><span>📋</span> Applications</a>
+                    <a href="{% url 'student_dashboard' %}" class="nav-item">My Applications</a>
+                    <a href="{% url 'student_profile' %}" class="nav-item">Edit Profile</a>
                 {% else %}
-                    <a href="{% url 'faculty_dashboard' %}" class="nav-item"><span>📊</span> Reviews</a>
+                    <a href="{% url 'faculty_dashboard' %}" class="nav-item">Review Board</a>
                 {% endif %}
-                <a href="{% url 'logout' %}" class="nav-item" style="color: #f87171; margin-top: 20px;"><span>🚪</span> Logout</a>
+                <a href="{% url 'logout' %}" class="nav-item" style="color: var(--secondary); margin-top: 20px;">Logout</a>
             {% else %}
                 <div class="sidebar-section-label">Login</div>
-                <a href="{% url 'login' %}?role=Student" class="nav-item">🔑 Student Login</a>
-                <a href="{% url 'login' %}?role=Faculty" class="nav-item">🔒 Faculty Login</a>
+                <a href="{% url 'login' %}?role=Student" class="nav-item">Student Portal</a>
+                <a href="{% url 'login' %}?role=Faculty" class="nav-item">Faculty Portal</a>
                 
                 <div class="sidebar-section-label">Join</div>
-                <a href="{% url 'register' %}" class="nav-item">👨‍🎓 Student Signup</a>
-                <a href="{% url 'faculty_register' %}" class="nav-item">💼 Faculty Signup</a>
+                <a href="{% url 'register' %}" class="nav-item">Student Signup</a>
+                <a href="{% url 'faculty_register' %}" class="nav-item">Faculty Signup</a>
             {% endif %}
         </nav>
-    </div>
+    </aside>
 
-    <div class="main-content">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="status-rejected">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-
+    <main class="main-content">
         {% block content %}{% endblock %}
-    </div>
+    </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alertBox = document.getElementById('alert-box');
+            if (alertBox) {
+                setTimeout(() => {
+                    alertBox.style.transition = "opacity 0.8s ease, transform 0.8s ease";
+                    alertBox.style.opacity = "0";
+                    alertBox.style.transform = "translateY(-20px)";
+                    setTimeout(() => alertBox.remove(), 800);
+                }, 4000); 
+            }
+        });
+    </script>
 </body>
 </html>
