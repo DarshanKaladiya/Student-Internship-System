@@ -1,28 +1,42 @@
 {% extends 'management/base.html' %}
 {% block content %}
-<div class="section-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2>My Profile</h2>
-        <a href="{% url 'edit_profile' %}" class="btn-primary" style="width: auto; padding: 10px 20px;">
-            Edit Profile
-        </a>
+<div class="profile-container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h2 style="color: #1e293b; font-weight: 800;">My Profile</h2>
+        <a href="{% url 'edit_profile' %}" style="background: #2563eb; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600;">Edit Profile</a>
     </div>
 
-    <div style="margin-bottom: 30px;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-            <span>Profile Strength</span>
-            <span>{{ completion }}%</span>
+    <div style="background: white; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden;">
+        <div style="background: #f8fafc; padding: 20px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 20px;">
+            <div style="width: 80px; height: 80px; background: #dbeafe; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem;">👨‍🎓</div>
+            <div>
+                <h3 style="margin: 0; color: #1e293b;">{{ profile.full_name|default:user.username }}</h3>
+                <p style="margin: 5px 0 0 0; color: #64748b;">{{ profile.department|default:"Department not set" }}</p>
+            </div>
         </div>
-        <div style="width: 100%; bg: #e2e8f0; height: 10px; border-radius: 5px; overflow: hidden;">
-            <div style="width: {{ completion }}%; background: var(--primary); height: 100%;"></div>
-        </div>
-    </div>
 
-    <div class="profile-details">
-        <p><strong>Full Name:</strong> {{ profile.full_name|default:"Not set" }}</p>
-        <p><strong>Roll No:</strong> {{ profile.roll_no|default:"Not set" }}</p>
-        <p><strong>Department:</strong> {{ profile.department|default:"Not set" }}</p>
-        <p><strong>Skills:</strong> {{ profile.skills|default:"No skills added" }}</p>
+        <div style="padding: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div>
+                <label style="display: block; font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Roll Number</label>
+                <p style="margin: 5px 0 0 0; color: #334155; font-weight: 600;">{{ profile.roll_no|default:"Not provided" }}</p>
+            </div>
+            <div>
+                <label style="display: block; font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Semester</label>
+                <p style="margin: 5px 0 0 0; color: #334155; font-weight: 600;">{{ profile.semester|default:"Not set" }}</p>
+            </div>
+            <div style="grid-column: span 2;">
+                <label style="display: block; font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Skills</label>
+                <div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px;">
+                    {% if profile.skills %}
+                        {% for skill in profile.skills.split %}
+                            <span style="background: #f1f5f9; color: #475569; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">{{ skill }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: #94a3b8; font-style: italic;">No skills added yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

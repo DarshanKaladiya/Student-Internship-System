@@ -3,39 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internly</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Internly - Professional Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
+
     <div class="sidebar">
-        <a href="{% url 'home' %}" class="sidebar-brand">Internly</a>
-        <nav style="flex: 1;">
+        <a href="{% url 'home' %}" class="logo-text">
+            <div class="logo-accent">I</div> Internly
+        </a>
+
+        <nav>
             <a href="{% url 'home' %}" class="nav-item"><span>🏠</span> Dashboard</a>
             <a href="{% url 'internship_list' %}" class="nav-item"><span>💼</span> Internships</a>
+
             {% if user.is_authenticated %}
-                {% if user.userprofile.role == 'FACULTY' %}
-                    <a href="{% url 'faculty_dashboard' %}" class="nav-item"><span>📊</span> Reviews</a>
+                <div class="sidebar-section-label">Portal</div>
+                {% if user.userprofile.role == 'STUDENT' %}
+                    <a href="{% url 'student_dashboard' %}" class="nav-item"><span>📋</span> Applications</a>
                 {% else %}
-                    <a href="{% url 'student_dashboard' %}" class="nav-item"><span>📋</span> My Applied</a>
+                    <a href="{% url 'faculty_dashboard' %}" class="nav-item"><span>📊</span> Reviews</a>
                 {% endif %}
+                <a href="{% url 'logout' %}" class="nav-item" style="color: #f87171; margin-top: 20px;"><span>🚪</span> Logout</a>
+            {% else %}
+                <div class="sidebar-section-label">Login</div>
+                <a href="{% url 'login' %}?role=Student" class="nav-item">🔑 Student Login</a>
+                <a href="{% url 'login' %}?role=Faculty" class="nav-item">🔒 Faculty Login</a>
+                
+                <div class="sidebar-section-label">Join</div>
+                <a href="{% url 'register' %}" class="nav-item">👨‍🎓 Student Signup</a>
+                <a href="{% url 'faculty_register' %}" class="nav-item">💼 Faculty Signup</a>
             {% endif %}
         </nav>
-        <div class="sidebar-footer">
-            {% if not user.is_authenticated %}
-                <a href="{% url 'login' %}?role=Student" class="nav-item"><span>🔑</span> Student Login</a>
-                <a href="{% url 'login' %}?role=Faculty" class="nav-item" style="color: #059669;"><span>🛡️</span> Faculty Login</a>
-                <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 10px 0;">
-                <a href="{% url 'register' %}" class="nav-item"><span>👨‍🎓</span> Student Join</a>
-                <a href="{% url 'faculty_register' %}" class="nav-item" style="color: #059669;"><span>🎓</span> Faculty Join</a>
-            {% else %}
-                <a href="{% url 'logout' %}" class="nav-item" style="color: #dc2626;"><span>🚪</span> Logout</a>
-            {% endif %}
-        </div>
     </div>
+
     <div class="main-content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="status-rejected">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
         {% block content %}{% endblock %}
     </div>
+
 </body>
 </html>

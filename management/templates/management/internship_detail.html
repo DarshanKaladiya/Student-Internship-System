@@ -1,26 +1,35 @@
 {% extends 'management/base.html' %}
 {% block content %}
 <div style="max-width: 800px; margin: 0 auto;">
-    <a href="{% url 'internship_list' %}" style="text-decoration: none; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 20px;">← Back to listings</a>
-    
-    <div class="section-card">
+    <a href="{% url 'internship_list' %}" style="text-decoration: none; color: #64748b; font-weight: 600; display: block; margin-bottom: 20px;">← Back to listings</a>
+
+    <div class="section-card" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
             <div>
-                <h1 style="margin: 0; font-family: 'Poppins'; font-weight: 800;">{{ internship.title }}</h1>
-                <p style="font-size: 1.2rem; color: var(--primary); font-weight: 600;">{{ internship.company_name }}</p>
+                <h1 style="margin: 0; color: #1e293b;">{{ internship.title }}</h1>
+                <p style="margin: 5px 0 0 0; color: #64748b; font-size: 1.1rem;">{{ internship.company_name }}</p>
             </div>
-            <a href="{% url 'apply_internship' internship.id %}" class="btn-primary" style="width: auto; padding: 12px 30px;">Apply Now</a>
+            <a href="{% url 'apply_internship' internship.pk %}" 
+               style="background: #2563eb; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: 700;">
+               Apply Now
+            </a>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; padding: 20px; background: var(--bg-main); border-radius: 15px;">
-            <div><strong>Location:</strong> {{ internship.location }}</div>
-            <div><strong>Stipend:</strong> {{ internship.stipend }}</div>
-            <div><strong>Posted On:</strong> {{ internship.posted_date|date:"F d, Y" }}</div>
-            <div><strong>Required Skills:</strong> {{ internship.required_skills }}</div>
+        <div style="margin-bottom: 30px;">
+            <h3 style="color: #475569;">Job Description</h3>
+            <p style="line-height: 1.6; color: #334155;">{{ internship.description }}</p>
         </div>
 
-        <h3>Description</h3>
-        <p style="line-height: 1.6; color: var(--text-dark);">{{ internship.description }}</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="padding: 15px; background: #f8fafc; border-radius: 10px;">
+                <span style="display: block; font-size: 0.8rem; color: #64748b;">Location</span>
+                <strong>{{ internship.location }}</strong>
+            </div>
+            <div style="padding: 15px; background: #f8fafc; border-radius: 10px;">
+                <span style="display: block; font-size: 0.8rem; color: #64748b;">Stipend</span>
+                <strong>{{ internship.stipend }}</strong>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
