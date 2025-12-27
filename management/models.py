@@ -28,6 +28,7 @@ class Internship(models.Model):
     null=True,
     blank=True
     )
+
     title = models.CharField(max_length=200)
     company_name = models.CharField(max_length=200, blank=True)
     description = models.TextField()
