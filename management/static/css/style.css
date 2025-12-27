@@ -92,11 +92,12 @@ body {
 
 /* --- FIXED MAIN CONTENT --- */
 .main-content {
-    margin-left: var(--sidebar-width); /* Prevents content from sliding under sidebar */
+    margin-left: 280px; /* This MUST match your sidebar width */
     padding: 60px 80px;
-    width: calc(100% - var(--sidebar-width));
-    min-height: 100vh;
+    width: calc(100% - 280px);
 }
+
+
 
 /* --- GLASS CARDS & BUTTONS --- */
 .glass-card {

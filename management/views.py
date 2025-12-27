@@ -64,13 +64,13 @@ def login_view(request):
 # --- Profile Management ---
 @login_required
 def student_profile(request):
-    """Handles student profile updates including profile pictures."""
-    profile = request.user.userprofile
+    """FIXED: Uses get_or_create to prevent RelatedObjectDoesNotExist."""
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    
     if request.method == 'POST':
         form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            messages.success(request, "Identity node synchronized.")
             return redirect('student_dashboard')
     else:
         form = ProfileUpdateForm(instance=profile)
@@ -104,12 +104,11 @@ def post_internship(request):
 
 @login_required
 def review_application(request, pk, status):
-    """Authorizes or terminates student application signals."""
+    """Processes faculty decisions on student applications."""
     app = get_object_or_404(Application, pk=pk, internship__faculty=request.user)
     if status in ['APPROVED', 'REJECTED']:
         app.status = status
         app.save()
-        messages.success(request, f"Signal {status.lower()} successfully.")
     return redirect('faculty_dashboard')
 
 # --- Student Marketplace & Dashboard ---
