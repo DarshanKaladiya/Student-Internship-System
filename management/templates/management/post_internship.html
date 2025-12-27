@@ -2,30 +2,43 @@
 {% load static %}
 
 {% block content %}
-<div class="auth-wrapper" style="align-items: flex-start; padding-top: 50px;">
-    <div class="auth-card" style="max-width: 700px; text-align: left;">
-        <div class="auth-header" style="text-align: left; margin-bottom: 30px;">
-            <h1 style="font-size: 2rem; color: var(--text-heading);">Post New Internship</h1>
-            <p>Fill in the details below to create a new opportunity for students.</p>
-        </div>
+<div class="header-area" style="margin-bottom: 40px;">
+    <h1 style="font-size: 2.5rem; font-weight: 900; color: white;">Initialize <span style="color: var(--primary);">Opportunity</span></h1>
+    <p style="opacity: 0.8;">Broadcast a new internship node to the student ecosystem.</p>
+</div>
 
+<div class="auth-wrapper" style="align-items: flex-start; justify-content: flex-start; min-height: auto;">
+    <div class="glass-card" style="width: 100%; max-width: 850px; padding: 40px;">
         <form method="POST" class="auth-form">
             {% csrf_token %}
-            {% for field in form %}
-                <div style="margin-bottom: 25px;">
-                    <label style="display: block; font-weight: 700; color: var(--text-heading); margin-bottom: 8px;">
-                        {{ field.label }}
-                    </label>
-                    {{ field }}
-                    {% if field.help_text %}
-                        <small style="color: var(--text-body); display: block; margin-top: 5px;">{{ field.help_text }}</small>
-                    {% endif %}
-                </div>
-            {% endfor %}
             
-            <div style="display: flex; gap: 15px; margin-top: 40px;">
-                <button type="submit" class="btn-primary">Publish Internship</button>
-                <a href="{% url 'faculty_dashboard' %}" class="btn-primary" style="background: #e2e8f0 !important; color: #475569 !important; text-decoration: none; text-align: center;">Cancel</a>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div class="form-section">
+                    {% for field in form %}
+                        {% if forloop.counter <= 4 %}
+                        <div class="form-group">
+                            <label>{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="form-section">
+                    {% for field in form %}
+                        {% if forloop.counter > 4 %}
+                        <div class="form-group">
+                            <label>{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; display: flex; gap: 20px;">
+                <button type="submit" class="btn-primary" style="padding: 16px 45px;">ACTIVATE NODE</button>
+                <a href="{% url 'faculty_dashboard' %}" class="btn-primary" style="background: rgba(255,255,255,0.05) !important; text-decoration: none; padding: 16px 45px;">CANCEL</a>
             </div>
         </form>
     </div>

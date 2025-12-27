@@ -64,17 +64,13 @@
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
             const alertBox = document.getElementById('alert-box');
             if (alertBox) {
-                setTimeout(() => {
-                    alertBox.style.transition = "opacity 0.8s ease, transform 0.8s ease";
-                    alertBox.style.opacity = "0";
-                    alertBox.style.transform = "translateY(-20px)";
-                    setTimeout(() => alertBox.remove(), 800);
-                }, 4000); 
+                alertBox.style.opacity = "0";
+                setTimeout(() => alertBox.remove(), 800);
             }
-        });
+        }, 4000);
     </script>
 </body>
 </html>

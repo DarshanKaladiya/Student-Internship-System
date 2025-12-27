@@ -1,33 +1,23 @@
 from django import forms
-from .models import UserProfile, Internship, Application
+from .models import UserProfile, Internship
 
 class ProfileUpdateForm(forms.ModelForm):
-    """
-    Form for students to update their academic details.
-    """
+    """Form for student academic identity synchronization."""
     class Meta:
         model = UserProfile
-        fields = ['full_name', 'roll_no', 'department', 'semester', 'skills']
+        fields = ['profile_pic', 'full_name', 'roll_no', 'department', 'semester', 'skills']
         widgets = {
-            'full_name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Enter Full Name'}),
-            'roll_no': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'e.g. 21BCE100'}),
-            'department': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'e.g. Computer Science'}),
-            'semester': forms.NumberInput(attrs={'class': 'form-input', 'placeholder': 'Current Semester'}),
-            'skills': forms.Textarea(attrs={'class': 'form-input', 'placeholder': 'e.g. Python, SQL, React', 'rows': 3}),
+            'skills': forms.Textarea(attrs={'rows': 3, 'placeholder': 'e.g. Python, React, SQL...'}),
         }
 
 class InternshipForm(forms.ModelForm):
-    """
-    Form for faculty to post new internships based on your specific model fields.
-    """
+    """Form for initializing internship nodes with deadline logic."""
     class Meta:
         model = Internship
-        fields = ['title', 'company_name', 'description', 'required_skills', 'location', 'stipend']
+        fields = ['title', 'company_name', 'location', 'stipend', 'deadline', 'required_skills', 'description']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Internship Title'}),
-            'company_name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Company Name'}),
-            'description': forms.Textarea(attrs={'class': 'form-input', 'placeholder': 'Detailed Job Description', 'rows': 4}),
-            'required_skills': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'e.g. Python, Java, Excel'}),
-            'location': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'e.g. Remote, Mumbai, NY'}),
-            'stipend': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'e.g. ₹15,000/mo or Unpaid'}),
+            # Native datetime-local picker for modern browsers
+            'deadline': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'glass-input'}),
+            'description': forms.Textarea(attrs={'rows': 5}),
+            'required_skills': forms.TextInput(attrs={'placeholder': 'e.g. Python, Java, Figma'}),
         }
