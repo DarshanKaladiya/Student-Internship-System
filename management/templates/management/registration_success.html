@@ -1,0 +1,30 @@
+{% extends 'management/base.html' %}
+{% block content %}
+<div class="auth-container" style="max-width: 600px; margin: 60px auto; text-align: center;">
+    
+    <div class="workspace-card" style="padding: 60px;">
+        
+        <div class="card-icon-node" style="margin: 0 auto 30px; width: 80px; height: 80px; font-size: 2rem; background: var(--brand-blue); color: white;">
+            ✓
+        </div>
+
+        <h1 style="font-size: 2.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 20px; color: #111827;">
+            IDENTITY<br>
+            <span class="highlight-blue">INITIALIZED</span>
+        </h1>
+
+        <p style="font-size: 1.1rem; font-weight: 600; color: #4b5563; margin-bottom: 40px; line-height: 1.6;">
+            Your professional node has been successfully synchronized with the Internly network. You may now access your specialized workspace.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <a href="{% url 'login' %}" class="btn-primary" style="width: 100%; font-size: 1.1rem;">
+                PROCEED TO LOGIN PORTAL
+            </a>
+            <a href="{% url 'home' %}" style="color: #9ca3af; font-weight: 700; text-decoration: none; font-size: 0.85rem;">
+                RETURN TO SYSTEM HOME
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

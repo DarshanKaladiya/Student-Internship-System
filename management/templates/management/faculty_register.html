@@ -1,14 +1,50 @@
 {% extends 'management/base.html' %}
 {% block content %}
-<div class="auth-wrapper">
-    <div class="auth-card">
-        <h2>Create Account</h2>
-        <p class="subtitle">Join the portal to start applying</p>
-        <form method="post">
+<div style="display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 40px 0;">
+    
+    <div class="workspace-card" style="max-width: 500px; width: 100%; padding: 60px; background: white; border: 3px solid #1e1e1e; box-shadow: 15px 15px 0px rgba(0,0,0,0.1); border-radius: 12px;">
+        
+        <h1 style="font-size: 3rem; font-weight: 900; margin-bottom: 5px; color: #1e1e1e; line-height: 1;">FACULTY</h1>
+        <div style="background: #1e1e1e; color: white; padding: 10px 20px; font-weight: 900; border-radius: 4px; display: inline-block; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px;">
+            SYSTEM JOIN
+        </div>
+
+        <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn-primary">Register</button>
+            
+            {% for field in form %}
+            <div style="margin-bottom: 25px;">
+                <label style="font-size: 0.75rem; font-weight: 900; color: #6b7280; text-transform: uppercase; display: block; margin-bottom: 8px; letter-spacing: 1px;">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                <p style="color: #ef4444; font-size: 0.7rem; font-weight: 800; margin-top: 5px;">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 18px; font-size: 1.1rem; border-radius: 10px; background: #3b82f6; color: white; border: 3px solid #1e1e1e; box-shadow: 4px 4px 0px #1e1e1e; font-weight: 900; cursor: pointer;">
+                INITIALIZE FACULTY NODE
+            </button>
         </form>
+
+        <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #f3f4f6; text-align: center;">
+            <p style="font-size: 0.8rem; font-weight: 700; color: #6b7280;">
+                ALREADY HAVE ACCESS? <a href="{% url 'login' %}" style="color: #3b82f6; text-decoration: none; font-weight: 900;">LOGIN</a>
+            </p>
+        </div>
     </div>
 </div>
+
+<style>
+    input[type="text"], input[type="password"], input[type="email"], select, textarea {
+        width: 100%;
+        padding: 14px;
+        border: 2px solid #1e1e1e;
+        border-radius: 8px;
+        font-weight: 600;
+        box-sizing: border-box;
+    }
+</style>
 {% endblock %}

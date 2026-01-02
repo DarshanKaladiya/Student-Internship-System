@@ -1,37 +1,46 @@
 {% extends 'management/base.html' %}
-{% load static %}
-
 {% block content %}
-<div class="auth-wrapper">
-    <div class="glass-card auth-card">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <h1 style="color: white; font-size: 2.2rem; font-weight: 900;">
-                {{ role }} <span style="color: var(--primary);">Login</span>
-            </h1>
-            <p style="margin-top: 10px; font-size: 0.9rem;">Authenticate to access the ecosystem.</p>
+<div style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+    
+    <div class="workspace-card" style="max-width: 480px; width: 100%; padding: 60px; background: white; border: 3px solid #1e1e1e; box-shadow: 15px 15px 0px rgba(0,0,0,0.1); border-radius: 12px;">
+        
+        <h1 style="font-size: 3rem; font-weight: 900; margin-bottom: 5px; color: #1e1e1e; line-height: 1;">SECURE</h1>
+        <div style="background: #3b82f6; color: white; padding: 10px 20px; font-weight: 900; border-radius: 4px; display: inline-block; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px;">
+            AUTHORIZATION
         </div>
 
-        <form method="POST" action="{% url 'login' %}?role={{ role }}">
+        {# ✅ ONLY SHOW AUTHENTICATION ERRORS HERE #}
+        {% if messages %}
+            {% for message in messages %}
+                {% if 'login' in message|lower or 'invalid' in message|lower %}
+                    <div style="background: #fee2e2; color: #991b1b; padding: 15px 20px; border: 2px solid #f87171; border-radius: 8px; margin-bottom: 30px; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 12px;">
+                        <span style="font-size: 1.2rem; font-weight: 900;">×</span> {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
             {% csrf_token %}
+            <div style="margin-bottom: 25px;">
+                <label style="font-size: 0.75rem; font-weight: 900; color: #6b7280; text-transform: uppercase; display: block; margin-bottom: 8px;">Username</label>
+                <input type="text" name="username" required style="width: 100%; padding: 14px; border: 2px solid #1e1e1e; border-radius: 8px; font-weight: 600;">
+            </div>
             
-            <div class="form-group">
-                <label>Username</label>
-                {{ form.username }}
+            <div style="margin-bottom: 40px;">
+                <label style="font-size: 0.75rem; font-weight: 900; color: #6b7280; text-transform: uppercase; display: block; margin-bottom: 8px;">Password</label>
+                <input type="password" name="password" required style="width: 100%; padding: 14px; border: 2px solid #1e1e1e; border-radius: 8px; font-weight: 600;">
             </div>
-
-            <div class="form-group">
-                <label>Security Key (Password)</label>
-                {{ form.password }}
-            </div>
-
-            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">
-                INITIALIZE SYNC
+            
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 18px; font-size: 1.1rem; border-radius: 10px; background: #3b82f6; color: white; border: 3px solid #1e1e1e; box-shadow: 4px 4px 0px #1e1e1e; font-weight: 900; cursor: pointer;">
+                ACCESS WORKSPACE
             </button>
         </form>
 
-        <div style="text-align: center; margin-top: 35px; border-top: 1px solid var(--glass-border); padding-top: 25px;">
-            <p style="font-size: 0.85rem;">Need a node? 
-                <a href="{% url 'register' %}" style="color: var(--primary); font-weight: 700; text-decoration: none;">Register Identity</a>
+        <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #f3f4f6; text-align: center;">
+            <p style="font-size: 0.7rem; font-weight: 900; color: #9ca3af; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">System Status</p>
+            <p style="color: #10b981; font-weight: 900; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <span style="font-size: 1.2rem;">●</span> ALL SYSTEMS OPERATIONAL
             </p>
         </div>
     </div>

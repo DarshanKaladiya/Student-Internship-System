@@ -1,52 +1,57 @@
 {% extends 'management/base.html' %}
-{% load static %}
-
 {% block content %}
-<div class="auth-wrapper" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
-    <div class="glass-card" style="width: 100%; max-width: 500px; padding: 50px; position: relative; overflow: hidden;">
+<div style="display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 40px 0;">
+    
+    <div class="workspace-card" style="max-width: 500px; width: 100%; padding: 60px; background: white; border: 3px solid #1e1e1e; box-shadow: 15px 15px 0px rgba(0,0,0,0.1); border-radius: 12px;">
         
-        <div style="text-align: center; margin-bottom: 40px;">
-            <div style="display: inline-block; background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 8px 16px; border-radius: 10px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px;">
-                Initialize New Node
-            </div>
-            <h1 style="color: white; font-size: 2.2rem; font-weight: 900; letter-spacing: -1px;">
-                {{ role }} <span style="color: var(--primary);">Signup</span>
-            </h1>
-            <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">Create your credentials to join the ecosystem.</p>
+        <h1 style="font-size: 3rem; font-weight: 900; margin-bottom: 5px; color: #1e1e1e; line-height: 1;">STUDENT</h1>
+        <div style="background: #3b82f6; color: white; padding: 10px 20px; font-weight: 900; border-radius: 4px; display: inline-block; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px;">
+            REGISTRATION
         </div>
 
-        <form method="POST" class="auth-form">
+        <form method="POST">
             {% csrf_token %}
             
             {% for field in form %}
-            <div class="form-group" style="margin-bottom: 25px;">
-                <label style="color: var(--secondary); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; display: block;">
+            <div style="margin-bottom: 25px;">
+                <label style="font-size: 0.75rem; font-weight: 900; color: #6b7280; text-transform: uppercase; display: block; margin-bottom: 8px; letter-spacing: 1px;">
                     {{ field.label }}
                 </label>
-                {{ field }}
+                <div style="width: 100%;">
+                    {{ field }}
+                </div>
                 {% if field.errors %}
-                    <div style="color: var(--secondary); font-size: 0.75rem; margin-top: 5px; font-weight: 600;">
-                        {{ field.errors.0 }}
-                    </div>
-                {% endif %}
-                {% if field.help_text %}
-                    <small style="color: #64748b; font-size: 0.7rem; display: block; margin-top: 5px; line-height: 1.4;">
-                        {{ field.help_text }}
-                    </small>
+                <p style="color: #ef4444; font-size: 0.7rem; font-weight: 800; margin-top: 5px;">{{ field.errors.0 }}</p>
                 {% endif %}
             </div>
             {% endfor %}
-
-            <button type="submit" class="btn-primary" style="width: 100%; padding: 18px; font-size: 1rem; letter-spacing: 1px; margin-top: 10px;">
-                REGISTER IDENTITY
+            
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 18px; font-size: 1.1rem; border-radius: 10px; background: white; color: #1e1e1e; border: 3px solid #1e1e1e; box-shadow: 4px 4px 0px #1e1e1e; font-weight: 900; cursor: pointer; transition: 0.2s;">
+                CREATE IDENTITY NODE
             </button>
         </form>
 
-        <div style="text-align: center; margin-top: 30px; border-top: 1px solid var(--glass-border); padding-top: 25px;">
-            <p style="font-size: 0.85rem;">Already have a node? 
-                <a href="{% url 'login' %}?role={{ role }}" style="color: var(--primary); font-weight: 700; text-decoration: none;">Secure Login</a>
+        <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #f3f4f6; text-align: center;">
+            <p style="font-size: 0.8rem; font-weight: 700; color: #6b7280;">
+                ALREADY REGISTERED? <a href="{% url 'login' %}" style="color: #3b82f6; text-decoration: none; font-weight: 900;">LOGIN HERE</a>
             </p>
         </div>
     </div>
 </div>
+
+<style>
+    /* Styling for Django's default form inputs to match your theme */
+    input[type="text"], input[type="password"], input[type="email"], select, textarea {
+        width: 100%;
+        padding: 14px;
+        border: 2px solid #1e1e1e;
+        border-radius: 8px;
+        font-weight: 600;
+        box-sizing: border-box;
+    }
+    .btn-primary:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0px #1e1e1e;
+    }
+</style>
 {% endblock %}

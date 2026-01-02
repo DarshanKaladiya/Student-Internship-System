@@ -1,74 +1,98 @@
 {% extends 'management/base.html' %}
-{% load static %}
-
 {% block content %}
-<div class="header-area" style="margin-bottom: 50px;">
-    <h1 style="font-size: 3.5rem; font-weight: 900; color: white; letter-spacing: -2px;">
-        Mission <span style="color: var(--primary);">Control</span>
-    </h1>
-    <p style="font-size: 1.1rem; opacity: 0.8;">Monitor your active application nodes and track institutional authorization status.</p>
+
+<div class="dashboard-container" style="max-width: 1100px; margin: 0 auto;">
+
+    <!-- HEADER -->
+    <div style="margin-bottom: 40px;">
+        <h1 class="main-header">
+            STUDENT<br>
+            <span class="highlight-blue">DASHBOARD</span>
+        </h1>
+        <p style="font-weight: 600; color: #6b7280; margin-top: 10px;">
+            Track your internship applications and approval status.
+        </p>
+    </div>
+
+    <!-- APPLICATION COUNT -->
+    <div class="workspace-card" style="padding: 30px; margin-bottom: 40px;">
+        <p style="font-weight: 800; color: #9ca3af;">TOTAL APPLICATIONS</p>
+        <h2 style="font-size: 2.5rem;">{{ total_apps }}</h2>
+    </div>
+
+    <!-- APPLICATION LIST -->
+    <h3 style="font-weight: 900; margin-bottom: 15px;">MY APPLICATION SIGNALS</h3>
+
+    <div class="workspace-card" style="padding: 30px;">
+        {% if applications %}
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #eee;">
+                        <th align="left">INTERNSHIP</th>
+                        <th align="left">COMPANY</th>
+                        <th align="center">STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 15px 0; font-weight: 700;">
+                            {{ app.internship.title }}
+                        </td>
+                        <td style="font-weight: 600;">
+                            {{ app.internship.company_name }}
+                        </td>
+                        <td align="center">
+
+                            {% if app.status == "APPROVED" %}
+                                <span style="
+                                    background: #dcfce7;
+                                    color: #166534;
+                                    padding: 6px 14px;
+                                    border-radius: 20px;
+                                    font-weight: 800;
+                                    font-size: 0.75rem;
+                                ">
+                                    APPROVED
+                                </span>
+
+                            {% elif app.status == "REJECTED" %}
+                                <span style="
+                                    background: #fee2e2;
+                                    color: #991b1b;
+                                    padding: 6px 14px;
+                                    border-radius: 20px;
+                                    font-weight: 800;
+                                    font-size: 0.75rem;
+                                ">
+                                    REJECTED
+                                </span>
+
+                            {% else %}
+                                <span style="
+                                    background: #fef9c3;
+                                    color: #854d0e;
+                                    padding: 6px 14px;
+                                    border-radius: 20px;
+                                    font-weight: 800;
+                                    font-size: 0.75rem;
+                                ">
+                                    PENDING
+                                </span>
+                            {% endif %}
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="text-align: center; color: #9ca3af; font-weight: 800;">
+                NO APPLICATION SIGNALS FOUND.
+            </p>
+        {% endif %}
+    </div>
+
 </div>
 
-<div class="stats-grid" style="margin-bottom: 60px;">
-    <div class="glass-card">
-        <h3 style="letter-spacing: 1.5px; color: var(--secondary); font-size: 0.75rem; font-weight: 800; text-transform: uppercase;">ACTIVE MISSIONS</h3>
-        <p class="stat-value">{{ applications.count|default:"0" }}</p>
-        <p style="font-size: 0.9rem; opacity: 0.6;">Total applications submitted</p>
-    </div>
-    <div class="glass-card">
-        <h3 style="letter-spacing: 1.5px; color: var(--primary); font-size: 0.75rem; font-weight: 800; text-transform: uppercase;">PENDING SYNC</h3>
-        <p class="stat-value">{{ pending_count|default:"0" }}</p>
-        <p style="font-size: 0.9rem; opacity: 0.6;">Awaiting faculty review</p>
-    </div>
-</div>
-
-<h2 style="margin-bottom: 30px; color: white; font-weight: 800; display: flex; align-items: center; gap: 15px;">
-    Application Feed <div style="height: 1px; flex-grow: 1; background: var(--glass-border);"></div>
-</h2>
-
-<div class="opportunity-grid" style="grid-template-columns: 1fr; gap: 20px;">
-    {% for app in applications %}
-    <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; padding: 30px 45px; transition: 0.3s ease;">
-        <div style="flex: 1;">
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-                <span style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 4px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;">
-                    ID: {{ app.pk }}
-                </span>
-                <span style="color: #64748b; font-size: 0.85rem;">🏫 {{ app.internship.faculty.get_full_name }}</span>
-            </div>
-            <h3 style="color: white; font-size: 1.6rem; font-weight: 800;">{{ app.internship.title }}</h3>
-            <p style="font-size: 0.9rem; opacity: 0.6; margin-top: 5px;">Timestamp: {{ app.applied_date|date:"M d, Y" }}</p>
-        </div>
-
-        <div style="text-align: right; min-width: 200px;">
-            {% if app.status == 'APPROVED' %}
-                <div style="color: #10b981; font-weight: 900; font-size: 0.85rem; border: 1px solid #10b981; padding: 10px 20px; border-radius: 12px; display: inline-block; background: rgba(16, 185, 129, 0.05);">
-                    ✓ AUTHORIZED
-                </div>
-            {% elif app.status == 'REJECTED' %}
-                <div style="color: var(--secondary); font-weight: 900; font-size: 0.85rem; border: 1px solid var(--secondary); padding: 10px 20px; border-radius: 12px; display: inline-block; background: rgba(236, 72, 153, 0.05);">
-                    ✕ TERMINATED
-                </div>
-            {% else %}
-                <div style="color: var(--primary); font-weight: 900; font-size: 0.85rem; border: 1px solid var(--primary); padding: 10px 20px; border-radius: 12px; display: inline-block; background: rgba(99, 102, 241, 0.05);">
-                    ● PENDING SYNC
-                </div>
-            {% endif %}
-            
-            <div style="margin-top: 15px;">
-                <a href="{% url 'internship_detail' app.internship.pk %}" style="color: white; text-decoration: none; font-size: 0.8rem; font-weight: 700; border-bottom: 1px solid var(--primary); padding-bottom: 2px;">
-                    VIEW LISTING →
-                </a>
-            </div>
-        </div>
-    </div>
-    {% empty %}
-    <div class="glass-card" style="text-align: center; padding: 80px; border-style: dashed;">
-        <div style="font-size: 3.5rem; margin-bottom: 25px; opacity: 0.3;">📂</div>
-        <h3 style="color: white; font-size: 1.5rem; font-weight: 800;">No Active Nodes Found</h3>
-        <p style="color: var(--text-body); margin-bottom: 30px;">Your application history is currently empty. Initialize your first connection in the marketplace.</p>
-        <a href="{% url 'internship_list' %}" class="btn-primary" style="text-decoration: none; padding: 14px 35px; display: inline-block;">EXPLORE OPPORTUNITIES</a>
-    </div>
-    {% endfor %}
-</div>
 {% endblock %}

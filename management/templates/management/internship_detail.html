@@ -1,67 +1,140 @@
 {% extends 'management/base.html' %}
-{% load static %}
-
 {% block content %}
-<div class="header-area" style="margin-bottom: 30px;">
-    <a href="{% url 'internship_list' %}" style="color: var(--primary); text-decoration: none; font-weight: 700; font-size: 0.9rem;">
-        ← RETURN TO MARKETPLACE
-    </a>
-</div>
 
-<div class="auth-wrapper" style="align-items: flex-start; justify-content: flex-start; min-height: auto;">
-    <div class="glass-card" style="width: 100%; max-width: 1100px; padding: 60px;">
-        
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 40px;">
-            <div style="flex: 1;">
-                <span style="background: rgba(236, 72, 153, 0.15); color: var(--secondary); padding: 8px 18px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;">
-                    PROJECT NODE: {{ internship.pk }}
-                </span>
-                <h1 style="font-size: 3.5rem; font-weight: 900; color: white; margin-top: 25px;">{{ internship.title }}</h1>
-                <p style="font-size: 1.3rem; color: var(--primary); font-weight: 700;">{{ internship.company_name|default:"Internal Academic Research" }}</p>
+<div class="detail-workspace" style="max-width: 900px; margin: 0 auto;">
+
+    <a href="{% url 'internship_list' %}"
+       style="text-decoration: none; color: var(--brand-dark); font-weight: 800;
+              font-size: 0.8rem; display: flex; align-items: center; margin-bottom: 30px;">
+        <span style="margin-right: 8px;">←</span> BACK TO ACTIVE NODES
+    </a>
+
+    <div class="workspace-card" style="padding: 50px; position: relative; overflow: hidden;">
+
+        <!-- VERIFIED BADGE -->
+        <div style="
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--brand-blue);
+            color: white;
+            padding: 10px 25px;
+            font-weight: 900;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+        ">
+            VERIFIED NODE
+        </div>
+
+        <!-- HEADER -->
+        <div style="margin-bottom: 40px;">
+            <p style="
+                color: var(--brand-blue);
+                font-weight: 900;
+                font-size: 0.9rem;
+                margin-bottom: 5px;
+                text-transform: uppercase;
+            ">
+                {{ internship.company_name }}
+            </p>
+
+            <h1 style="
+                font-size: 3.5rem;
+                font-weight: 900;
+                line-height: 1;
+                color: var(--brand-dark);
+            ">
+                {{ internship.title }}
+            </h1>
+        </div>
+
+        <!-- META INFO -->
+        <div style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            border-top: 2px solid #eee;
+            padding-top: 40px;
+        ">
+
+            <div>
+                <h4 style="font-weight: 900; font-size: 0.7rem; color: #9ca3af;
+                           margin-bottom: 15px; text-transform: uppercase;">
+                    Location
+                </h4>
+                <p style="font-weight: 700; font-size: 1.1rem; margin-bottom: 25px;">
+                    {{ internship.location }}
+                </p>
+
+                <h4 style="font-weight: 900; font-size: 0.7rem; color: #9ca3af;
+                           margin-bottom: 15px; text-transform: uppercase;">
+                    Stipend Package
+                </h4>
+                <p style="font-weight: 700; font-size: 1.1rem; color: #10b981;">
+                    {{ internship.stipend }}
+                </p>
             </div>
-            
-            <div style="flex-shrink: 0; text-align: right;">
-                <div style="background: rgba(255,255,255,0.03); padding: 25px; border-radius: 20px; border: 1px solid var(--glass-border);">
-                    <p style="font-size: 0.7rem; color: #64748b; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">FACULTY LEAD</p>
-                    <p style="color: white; font-weight: 700; font-size: 1.1rem;">
-                        {{ internship.faculty.username|default:"System Lead" }}
-                    </p>
+
+            <div>
+                <h4 style="font-weight: 900; font-size: 0.7rem; color: #9ca3af;
+                           margin-bottom: 15px; text-transform: uppercase;">
+                    Required Skills
+                </h4>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    {% for skill in internship.required_skills.split %}
+                        <span style="
+                            background: #eff6ff;
+                            color: var(--brand-blue);
+                            padding: 5px 12px;
+                            border: 1px solid var(--brand-blue);
+                            border-radius: 4px;
+                            font-weight: 800;
+                            font-size: 0.75rem;
+                        ">
+                            {{ skill }}
+                        </span>
+                    {% endfor %}
                 </div>
             </div>
+
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 50px;">
-            <div class="glass-card" style="padding: 25px; margin: 0;">
-                <p style="font-size: 0.7rem; color: var(--secondary); font-weight: 800;">LOCATION</p>
-                <p style="color: white;">📍 {{ internship.location|default:"Remote" }}</p>
-            </div>
-            <div class="glass-card" style="padding: 25px; margin: 0;">
-                <p style="font-size: 0.7rem; color: var(--secondary); font-weight: 800;">STIPEND</p>
-                <p style="color: white;">💰 {{ internship.stipend|default:"Unpaid" }}</p>
-            </div>
-            <div class="glass-card" style="padding: 25px; margin: 0;">
-                <p style="font-size: 0.7rem; color: var(--secondary); font-weight: 800;">TECH STACK</p>
-                <p style="color: white;">⚡ {{ internship.required_skills|default:"Generalist" }}</p>
-            </div>
+        <!-- DESCRIPTION -->
+        <div style="
+            background: #f9fafb;
+            padding: 30px;
+            border-radius: 8px;
+            border-left: 5px solid var(--brand-dark);
+            margin-bottom: 40px;
+        ">
+            <h4 style="font-weight: 900; font-size: 0.7rem; color: #9ca3af;
+                       margin-bottom: 15px; text-transform: uppercase;">
+                Node Description
+            </h4>
+            <p style="line-height: 1.8; font-weight: 500; color: #4b5563;">
+                {{ internship.description }}
+            </p>
         </div>
 
-        <div style="background: rgba(0,0,0,0.2); padding: 40px; border-radius: 24px;">
-            <h3 style="color: white; margin-bottom: 20px;">Intelligence</h3>
-            <p style="color: var(--text-body); line-height: 1.8;">{{ internship.description }}</p>
+        <!-- APPLY BUTTON -->
+        <div style="text-align: center;">
+            <form action="{% url 'apply_internship' internship.pk %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn-primary"
+                        style="width: 100%; font-size: 1.2rem; padding: 20px;">
+                    DEPLOY APPLICATION SIGNAL
+                </button>
+            </form>
+
+            <p style="margin-top: 15px; font-size: 0.75rem;
+                      font-weight: 700; color: #9ca3af;">
+                BY DEPLOYING, YOUR IDENTITY NODE WILL BE VISIBLE TO THE FACULTY MENTOR.
+            </p>
         </div>
 
-        <div style="margin-top: 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 40px; border-radius: 28px;">
-            <div>
-                <h4 style="color: white; font-size: 1.4rem;">Initialize Application?</h4>
-                <p style="font-size: 0.95rem; opacity: 0.7;">Your credentials will be shared for faculty review.</p>
-            </div>
-            {% if user.is_authenticated and user.userprofile.role == 'STUDENT' %}
-                <form action="{% url 'apply_internship' internship.pk %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-primary" style="padding: 16px 45px;">INITIALIZE UPLOAD</button>
-                </form>
-            {% endif %}
-        </div>
     </div>
 </div>
+
 {% endblock %}

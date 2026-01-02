@@ -3,74 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internly | Portal</title>
+    <title>Internly | Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    {% if messages %}
-    <div class="message-container" id="alert-box">
-        {% for message in messages %}
-        <div class="glass-alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
-            <div class="alert-icon">{% if message.tags == 'error' %}⚠️{% else %}✓{% endif %}</div>
-            <div class="alert-content">
-                <h4>SYSTEM SIGNAL</h4>
-                <p>{{ message }}</p>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
     <aside class="sidebar">
-        <div class="sidebar-brand">
-            <a href="{% url 'home' %}" class="brand-link">
-                <div class="brand-icon">
-                    <span class="icon-inner">I</span>
-                    <div class="icon-glow"></div>
-                </div>
-                <span class="brand-text">Internly</span>
-            </a>
-        </div>
-
+        <a href="{% if user.is_authenticated %}{% if user.userprofile.role == 'FACULTY' %}{% url 'faculty_dashboard' %}{% else %}{% url 'student_dashboard' %}{% endif %}{% else %}{% url 'home_landing' %}{% endif %}" class="brand-text">INTERNLY</a>
         <nav>
-            <a href="{% url 'home' %}" class="nav-item">Dashboard</a>
-            <a href="{% url 'internship_list' %}" class="nav-item">Internships</a>
-
-            {% if user.is_authenticated %}
-                <div class="sidebar-section-label">Workspace</div>
-                {% if user.userprofile.role == 'STUDENT' %}
-                    <a href="{% url 'student_dashboard' %}" class="nav-item">My Applications</a>
-                    <a href="{% url 'student_profile' %}" class="nav-item">Edit Profile</a>
-                {% else %}
-                    <a href="{% url 'faculty_dashboard' %}" class="nav-item">Review Board</a>
-                {% endif %}
-                <a href="{% url 'logout' %}" class="nav-item" style="color: var(--secondary); margin-top: 20px;">Logout</a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'home_landing' %}" class="nav-item">SYSTEM HOME</a>
+                <div class="sidebar-label">ACCESS PORTAL</div>
+                <a href="{% url 'login' %}" class="nav-item">LOGIN PORTAL</a>
+                <a href="{% url 'register' %}" class="nav-item">STUDENT JOIN</a>
+                <a href="{% url 'faculty_register' %}" class="nav-item">FACULTY JOIN</a>
             {% else %}
-                <div class="sidebar-section-label">Login</div>
-                <a href="{% url 'login' %}?role=Student" class="nav-item">Student Portal</a>
-                <a href="{% url 'login' %}?role=Faculty" class="nav-item">Faculty Portal</a>
-                
-                <div class="sidebar-section-label">Join</div>
-                <a href="{% url 'register' %}" class="nav-item">Student Signup</a>
-                <a href="{% url 'faculty_register' %}" class="nav-item">Faculty Signup</a>
+                <div class="sidebar-label">ACTIVE WORKSPACE</div>
+                <a href="{% url 'internship_list' %}" class="nav-item">ACTIVE NODES</a>
+                {% if user.userprofile.role == 'FACULTY' %}
+                    <a href="{% url 'faculty_dashboard' %}" class="nav-item">COMMAND BOARD</a>
+                    <a href="{% url 'post_internship' %}" class="nav-item">POST NEW NODE</a>
+                {% else %}
+                    <a href="{% url 'student_dashboard' %}" class="nav-item">IDENTITY HUB</a>
+                {% endif %}
+                <a href="{% url 'logout' %}" class="nav-item" style="color: #ef4444; margin-top: 20px;">EXIT SYSTEM</a>
             {% endif %}
         </nav>
     </aside>
 
     <main class="main-content">
-        {% block content %}{% endblock %}
+        <div class="content-wrapper">
+            {% block content %}{% endblock %}
+        </div>
+        <footer class="contact-footer">
+            <div class="footer-column">
+                <h4 class="footer-heading">SUPPORT CENTER</h4>
+                <p>Email: support@internly.io</p>
+                <p>Location: Central Campus Node</p>
+            </div>
+            <div class="footer-column about-col">
+                <h4 class="footer-heading">ABOUT</h4>
+                <p>Internly provides a verifiable technical record for industry leaders.</p>
+                <p style="color: #10b981; font-weight: 800; margin-top: 10px; font-size: 0.7rem;">
+                    ● ALL SYSTEMS OPERATIONAL
+                </p>
+            </div>
+        </footer>
     </main>
-
-    <script>
-        setTimeout(() => {
-            const alertBox = document.getElementById('alert-box');
-            if (alertBox) {
-                alertBox.style.opacity = "0";
-                setTimeout(() => alertBox.remove(), 800);
-            }
-        }, 4000);
-    </script>
 </body>
 </html>
