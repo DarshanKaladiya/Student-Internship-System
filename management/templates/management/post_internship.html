@@ -1,61 +1,109 @@
 {% extends 'management/base.html' %}
 {% block content %}
+
 <div class="post-node-container" style="max-width: 800px; margin: 0 auto;">
     <div style="margin-bottom: 40px;">
-        <h1 class="main-header">DEPLOY<br><span class="highlight-blue">INTERNSHIP NODE</span></h1>
-        <p style="font-weight: 600; color: #6b7280; margin-top: 10px;">INITIALIZE A NEW OPPORTUNITY FOR THE STUDENT NETWORK.</p>
+        <h1 class="main-header">
+            DEPLOY<br>
+            <span class="highlight-blue">INTERNSHIP NODE</span>
+        </h1>
+        <p style="font-weight: 600; color: #6b7280; margin-top: 10px;">
+            INITIALIZE A NEW OPPORTUNITY FOR THE STUDENT NETWORK.
+        </p>
     </div>
 
     <div class="workspace-card" style="padding: 40px;">
         <form method="POST">
             {% csrf_token %}
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+
+                <!-- LEFT COLUMN -->
                 <div class="form-node">
+
                     <div class="form-group">
-                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">INTERNSHIP TITLE</label>
+                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">
+                            INTERNSHIP TITLE
+                        </label>
                         {{ form.title }}
                     </div>
-                    
+
                     <div class="form-group" style="margin-top: 20px;">
-                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">COMPANY NAME</label>
+                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">
+                            COMPANY NAME
+                        </label>
                         {{ form.company_name }}
                     </div>
 
                     <div class="form-group" style="margin-top: 20px;">
-                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">LOCATION</label>
+                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">
+                            LOCATION
+                        </label>
                         {{ form.location }}
                     </div>
+
                 </div>
 
+                <!-- RIGHT COLUMN -->
                 <div class="form-node">
+
                     <div class="form-group">
-                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">STIPEND PACKAGE</label>
+                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">
+                            STIPEND PACKAGE
+                        </label>
                         {{ form.stipend }}
                     </div>
 
                     <div class="form-group" style="margin-top: 20px;">
-                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">DEADLINE DATE</label>
+                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">
+                            DEADLINE DATE
+                        </label>
                         {{ form.deadline }}
                     </div>
 
                     <div class="form-group" style="margin-top: 20px;">
-                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">REQUIRED SKILLS (KEYWORDS)</label>
+                        <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">
+                            REQUIRED SKILLS (KEYWORDS)
+                        </label>
                         {{ form.required_skills }}
                     </div>
+
                 </div>
             </div>
 
+            <!-- DESCRIPTION -->
             <div class="form-group" style="margin-top: 30px;">
-                <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">NODE DESCRIPTION</label>
+                <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">
+                    NODE DESCRIPTION
+                </label>
                 {{ form.description }}
             </div>
 
-            <div style="margin-top: 40px; display: flex; gap: 20px; border-top: 1px solid #eee; padding-top: 30px;">
-                <button type="submit" class="btn-primary" style="flex: 1; border-radius: 6px; cursor: pointer;">DEPLOY NODE</button>
-                <a href="{% url 'faculty_dashboard' %}" class="btn-outline" style="flex: 1; text-align: center; border-radius: 6px; text-decoration: none;">CANCEL</a>
+            <!-- ✅ NEW FIELD (UI SAFE) -->
+            <div class="form-group" style="margin-top: 20px;">
+                <label style="font-size: 0.7rem; font-weight: 900; color: #111827; display: block; margin-bottom: 8px;">
+                    COMPANY APPLY LINK (GOOGLE FORM – OPTIONAL)
+                </label>
+                {{ form.external_apply_link }}
             </div>
+
+            <!-- ACTIONS -->
+            <div style="margin-top: 40px; display: flex; gap: 20px; border-top: 1px solid #eee; padding-top: 30px;">
+                <button type="submit"
+                        class="btn-primary"
+                        style="flex: 1; border-radius: 6px; cursor: pointer;">
+                    DEPLOY NODE
+                </button>
+
+                <a href="{% url 'faculty_dashboard' %}"
+                   class="btn-outline"
+                   style="flex: 1; text-align: center; border-radius: 6px; text-decoration: none;">
+                    CANCEL
+                </a>
+            </div>
+
         </form>
     </div>
 </div>
+
 {% endblock %}
