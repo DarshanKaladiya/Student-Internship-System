@@ -1,0 +1,28 @@
+{% extends 'management/base.html' %}
+{% block content %}
+<div class="workspace-card" style="max-width: 800px; margin: 0 auto; padding: 40px;">
+    <h1 style="font-weight: 900; font-size: 2.5rem; margin-bottom: 10px;">{{ profile.full_name|default:profile.user.username }}</h1>
+    <p style="color: #4a90e2; font-weight: 800; text-transform: uppercase;">{{ profile.academy_name|default:"No Academy Listed" }}</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
+        <div>
+            <p style="font-weight: 800; color: #9ca3af; font-size: 0.8rem;">MAJOR</p>
+            <p style="font-weight: 700;">{{ profile.major|default:"N/A" }}</p>
+        </div>
+        <div>
+            <p style="font-weight: 800; color: #9ca3af; font-size: 0.8rem;">GPA</p>
+            <p style="font-weight: 700;">{{ profile.gpa|default:"N/A" }}</p>
+        </div>
+        <div style="grid-column: span 2;">
+            <p style="font-weight: 800; color: #9ca3af; font-size: 0.8rem;">TECHNICAL SKILLS</p>
+            <p style="font-weight: 700;">{{ profile.skills|default:"None listed" }}</p>
+        </div>
+        <div style="grid-column: span 2;">
+            <p style="font-weight: 800; color: #9ca3af; font-size: 0.8rem;">PERSONAL BIO</p>
+            <p style="font-style: italic;">"{{ profile.bio|default:"No bio provided." }}"</p>
+        </div>
+    </div>
+    
+    <a href="{% url 'faculty_dashboard' %}" style="margin-top: 40px; display: inline-block; font-weight: 900; color: #111;">← BACK TO COMMAND BOARD</a>
+</div>
+{% endblock %}

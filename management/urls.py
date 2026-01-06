@@ -16,8 +16,12 @@ urlpatterns = [
     path('student/dashboard/', views.student_dashboard, name='student_dashboard'),
     path('faculty/dashboard/', views.faculty_dashboard, name='faculty_dashboard'),
 
+    # ✅ Profile Management
+    path('profile/edit/', views.student_edit_profile, name='student_edit_profile'),
+    path('profile/view/<int:pk>/', views.view_student_profile, name='view_student_profile'),
+
     # Internship
-    path('post/', views.post_internship, name='post_internship'),
+    path('post/', views.post_internship, name='post_internship'), # Fixed name for NoReverseMatch
     path('internships/', views.internship_list, name='internship_list'),
     path('internships/<int:pk>/', views.internship_detail, name='internship_detail'),
     path('apply/<int:pk>/', views.apply_internship, name='apply_internship'),
