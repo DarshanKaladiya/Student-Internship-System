@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from .models import UserProfile, Internship, Application
 from .forms import InternshipPostForm
@@ -74,11 +75,10 @@ def faculty_register(request):
     return render(request, 'management/faculty_register.html', {'form': form})
 
 
-# ---------------- ✅ PROFILE MANAGEMENT ----------------
+# ---------------- PROFILE MANAGEMENT ----------------
 
 @login_required
 def student_edit_profile(request):
-    """ Allows students to add/update their academic identity record. """
     profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':
         profile.full_name = request.POST.get('full_name')
@@ -95,7 +95,6 @@ def student_edit_profile(request):
 
 @login_required
 def view_student_profile(request, pk):
-    """ Allows Faculty to check student details before approving an application. """
     student_user = get_object_or_404(User, pk=pk)
     profile = get_object_or_404(UserProfile, user=student_user)
     return render(request, 'management/view_profile.html', {'profile': profile})
@@ -125,9 +124,23 @@ def post_internship(request):
 
 
 def internship_list(request):
-    internships = Internship.objects.all()
+    """
+    Displays internship nodes with search/filter functionality.
+    """
+    query = request.GET.get('q')
+    if query:
+        # Filters by Title, Company, or Skills using OR logic
+        internships = Internship.objects.filter(
+            Q(title__icontains=query) | 
+            Q(company_name__icontains=query) | 
+            Q(required_skills__icontains=query)
+        )
+    else:
+        internships = Internship.objects.all()
+        
     return render(request, 'management/internship_list.html', {
-        'internships': internships
+        'internships': internships,
+        'query': query
     })
 
 
@@ -153,11 +166,7 @@ def apply_internship(request, pk):
 
 @login_required
 def approve_application(request, pk):
-    application = get_object_or_404(
-        Application,
-        pk=pk,
-        internship__faculty=request.user
-    )
+    application = get_object_or_404(Application, pk=pk, internship__faculty=request.user)
     application.status = 'APPROVED'
     application.save()
     messages.success(request, "Application approved.")
@@ -166,11 +175,7 @@ def approve_application(request, pk):
 
 @login_required
 def reject_application(request, pk):
-    application = get_object_or_404(
-        Application,
-        pk=pk,
-        internship__faculty=request.user
-    )
+    application = get_object_or_404(Application, pk=pk, internship__faculty=request.user)
     application.status = 'REJECTED'
     application.save()
     messages.success(request, "Application rejected.")
@@ -191,11 +196,7 @@ def student_dashboard(request):
 @login_required
 def faculty_dashboard(request):
     internships = Internship.objects.filter(faculty=request.user)
-    applications = Application.objects.filter(
-        internship__faculty=request.user,
-        status='PENDING'
-    ).select_related('student__userprofile')
-
+    applications = Application.objects.filter(internship__faculty=request.user, status='PENDING').select_related('student__userprofile')
     return render(request, 'management/faculty_dashboard.html', {
         'internships': internships,
         'applications': applications,

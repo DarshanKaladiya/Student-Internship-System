@@ -1,95 +1,137 @@
 {% extends 'management/base.html' %}
 {% block content %}
 
-<div style="max-width: 900px; margin: 0 auto;">
+<style>
+    /* Premium Compact Brutalist Styles */
+    .detail-card {
+        background: white;
+        border: 4px solid black;
+        box-shadow: 12px 12px 0px rgba(0,0,0,1);
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 40px;
+        border-radius: 2px;
+    }
 
-    <div class="workspace-card" style="padding: 40px;">
+    .btn-back:hover {
+        background-color: #f3f4f6 !important;
+        transform: translate(-2px, -2px);
+        box-shadow: 4px 4px 0px black !important;
+    }
 
-        <h2 style="font-weight: 900; font-size: 1.8rem; margin-bottom: 10px;">
-            {{ internship.title }}
-        </h2>
+    .btn-confirm-blue:hover {
+        background-color: #3b82f6 !important;
+        transform: translate(-3px, -3px);
+        box-shadow: 8px 8px 0px black !important;
+    }
 
-        <p style="font-weight: 700; color: #2563eb;">
-            {{ internship.company_name }} · {{ internship.location }}
-        </p>
+    .btn-google-form:hover {
+        background-color: #fef3c7 !important;
+        transform: translate(-3px, -3px);
+        box-shadow: 6px 6px 0px #f59e0b !important;
+    }
 
-        <div style="display: flex; gap: 40px; margin-top: 30px;">
+    .brutalist-btn {
+        transition: all 0.1s ease-in-out;
+    }
 
-            <div>
-                <h4 style="font-weight: 900; font-size: 0.7rem; color: #9ca3af; margin-bottom: 10px;">
-                    STIPEND PACKAGE
-                </h4>
-                <p style="font-weight: 700; font-size: 1.1rem;">
-                    {{ internship.stipend }}
-                </p>
-            </div>
+    .section-border {
+        border-left: 4px solid black;
+        padding-left: 15px;
+        margin-bottom: 25px;
+    }
 
-            <div>
-                <h4 style="font-weight: 900; font-size: 0.7rem; color: #9ca3af; margin-bottom: 10px;">
-                    DEADLINE
-                </h4>
-                <p style="font-weight: 700; font-size: 1.1rem;">
-                    {{ internship.deadline }}
-                </p>
-            </div>
+    .sidebar-box {
+        background: #f8fafc;
+        border: 3px solid black;
+        padding: 20px;
+        height: fit-content;
+    }
+</style>
 
-        </div>
+<div class="dashboard-container" style="padding: 20px 20px 80px;">
 
-        <div style="margin-top: 30px;">
-            <h4 style="font-weight: 900; font-size: 0.7rem; color: #9ca3af; margin-bottom: 10px;">
-                REQUIRED SKILLS
-            </h4>
-
-            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                {% for skill in internship.required_skills.split %}
-                    <span style="
-                        background: #eff6ff;
-                        color: #2563eb;
-                        padding: 6px 14px;
-                        border-radius: 20px;
-                        font-weight: 700;
-                        font-size: 0.75rem;
-                    ">
-                        {{ skill }}
-                    </span>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div style="margin-top: 30px;">
-            <h4 style="font-weight: 900; font-size: 0.7rem; color: #9ca3af; margin-bottom: 10px;">
-                DESCRIPTION
-            </h4>
-            <p style="color: #374151; line-height: 1.7;">
-                {{ internship.description }}
-            </p>
-        </div>
-
-        <!-- ✅ APPLY ACTIONS -->
-        <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 30px;">
-
-            {% if internship.external_apply_link %}
-                <!-- ✅ GOOGLE FORM APPLY -->
-                <a href="{{ internship.external_apply_link }}"
-                   target="_blank"
-                   class="btn-primary"
-                   style="display: inline-block; text-decoration: none;">
-                    APPLY VIA GOOGLE FORM
-                </a>
-            {% else %}
-                <!-- ✅ INTERNAL APPLY -->
-                <form method="POST" action="{% url 'apply_internship' internship.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-primary">
-                        APPLY NOW
-                    </button>
-                </form>
-            {% endif %}
-
-        </div>
-
+    <div style="max-width: 900px; margin: 0 auto 20px;">
+        <a href="{% url 'internship_list' %}" class="brutalist-btn btn-back" 
+           style="display: inline-block; padding: 10px 20px; border: 3px solid black; background: white; color: black; text-decoration: none; font-weight: 900; text-transform: uppercase; font-size: 0.8rem; box-shadow: 4px 4px 0px black;">
+            ← BACK TO LIST
+        </a>
     </div>
 
+    <div class="detail-card">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; margin-bottom: 35px;">
+            <div style="flex: 1;">
+                <h1 style="font-size: 3rem; font-weight: 900; margin: 0; line-height: 1; letter-spacing: -2px; text-transform: uppercase;">
+                    {{ internship.title }}
+                </h1>
+                <p style="font-size: 1.1rem; font-weight: 800; color: #4a90e2; margin-top: 15px; text-transform: uppercase;">
+                    {{ internship.company_name }} | <span style="color: black;">{{ internship.location }}</span>
+                </p>
+            </div>
+            
+            <div style="background: black; color: white; padding: 20px; text-align: center; min-width: 200px; box-shadow: 6px 6px 0px #4a90e2;">
+                <p style="margin: 0; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; color: #9ca3af; letter-spacing: 1px;">STIPEND PACKAGE</p>
+                <p style="margin: 5px 0 0; font-size: 1.4rem; font-weight: 900;">{{ internship.stipend }}</p>
+                <p style="margin: 0; font-size: 0.7rem; color: #9ca3af; font-weight: 700;">per month</p>
+            </div>
+        </div>
+
+        <div style="height: 3px; background: black; margin-bottom: 35px;"></div>
+
+        <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 40px;">
+            
+            <div>
+                <div class="section-border">
+                    <h3 style="font-weight: 900; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 10px; letter-spacing: 0.5px;">NODE DESCRIPTION</h3>
+                    <p style="font-size: 1rem; line-height: 1.6; color: #374151; font-weight: 500;">
+                        {{ internship.description|linebreaks }}
+                    </p>
+                </div>
+                
+                <div class="section-border" style="border-color: #4a90e2; margin-top: 30px;">
+                    <h3 style="font-weight: 900; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 10px;">REQUIRED ARSENAL</h3>
+                    <p style="font-size: 1.2rem; font-weight: 800; color: black;">
+                        {{ internship.required_skills }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="sidebar-box">
+                <div style="margin-bottom: 25px;">
+                    <p style="font-weight: 900; font-size: 0.7rem; color: #9ca3af; text-transform: uppercase;">DEADLINE</p>
+                    <p style="font-weight: 900; font-size: 1.3rem; color: #ef4444; margin: 2px 0;">{{ internship.deadline|date:"M d, Y" }}</p>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <p style="font-weight: 900; font-size: 0.7rem; color: #9ca3af; text-transform: uppercase;">POSTED BY</p>
+                    <p style="font-weight: 900; font-size: 1.2rem;">{{ internship.faculty.username }}</p>
+                </div>
+
+                {% if internship.external_apply_link %}
+                <div style="margin-top: 30px; border-top: 2px solid black; padding-top: 20px;">
+                    <p style="font-weight: 900; font-size: 0.7rem; color: #9ca3af; text-transform: uppercase; margin-bottom: 12px;">EXTERNAL PORTAL</p>
+                    <a href="{{ internship.external_apply_link }}" target="_blank" class="brutalist-btn btn-google-form"
+                       style="display: block; text-align: center; padding: 12px; background: #fffbeb; border: 2px solid #f59e0b; color: #b45309; text-decoration: none; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; box-shadow: 4px 4px 0px #fef3c7;">
+                        APPLY VIA GOOGLE FORM →
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="margin-top: 50px; text-align: center; border-top: 3px solid black; padding-top: 40px;">
+            <p style="font-weight: 800; color: #64748b; margin-bottom: 20px; font-size: 0.9rem;">Ready to deploy your application signal?</p>
+            
+            <form method="POST" action="{% url 'apply_internship' internship.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="brutalist-btn btn-confirm-blue" 
+                   style="display: inline-block; padding: 18px 50px; background: #2563eb; color: white; border: 3px solid black; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; box-shadow: 6px 6px 0px black; cursor: pointer;">
+                    CONFIRM APPLICATION SIGNAL →
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

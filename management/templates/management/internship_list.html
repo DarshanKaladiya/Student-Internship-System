@@ -1,135 +1,73 @@
 {% extends 'management/base.html' %}
 {% block content %}
 
-<div class="list-workspace" style="max-width: 1100px; margin: 0 auto;">
+<style>
+    .btn-filter:hover { background-color: #333 !important; transform: translate(-2px, -2px); box-shadow: 6px 6px 0px black !important; }
+    .btn-clear:hover { background-color: #f3f4f6 !important; transform: translate(-2px, -2px); box-shadow: 6px 6px 0px black !important; }
+    
+    /* Hover Effects for the Blue Button */
+    .btn-apply-blue:hover {
+        background-color: #3b82f6 !important;
+        transform: translate(-2px, -2px);
+        box-shadow: 8px 8px 0px black !important;
+    }
 
-    <!-- HEADER -->
-    <div style="margin-bottom: 40px;">
-        <h1 class="main-header">
-            ACTIVE<br>
-            <span class="highlight-blue">INTERNSHIP NODES</span>
-        </h1>
-        <p style="font-weight: 600; color: #6b7280; margin-top: 10px; max-width: 600px;">
-            Explore curated opportunities synchronized with your technical profile.
-            Every node is vetted by authorized faculty mentors.
-        </p>
+    .brutalist-btn { transition: all 0.1s ease-in-out; }
+</style>
+
+<div class="dashboard-container" style="max-width: 1200px; margin: 0 auto;">
+
+    <div style="margin-bottom: 50px;">
+        <h1 class="main-header">ACTIVE<br><span class="highlight-blue">INTERNSHIP NODES</span></h1>
+        
+        <form method="GET" action="{% url 'internship_list' %}" style="margin-top: 30px; display: flex; gap: 15px;">
+            <input type="text" name="q" placeholder="Search by Skills, Major, or Company..." 
+                   value="{{ query|default:'' }}"
+                   style="flex-grow: 1; padding: 15px; border: 3px solid black; font-weight: 700; font-family: inherit; font-size: 1.1rem;">
+            
+            <button type="submit" class="brutalist-btn btn-filter"
+                    style="padding: 15px 30px; background: black; color: white; border: 3px solid black; font-weight: 900; cursor: pointer; text-transform: uppercase; box-shadow: 4px 4px 0px black;">
+                FILTER NODES
+            </button>
+
+            {% if query %}
+                <a href="{% url 'internship_list' %}" class="brutalist-btn btn-clear"
+                   style="padding: 15px 30px; border: 3px solid black; background: white; color: black; text-decoration: none; font-weight: 900; box-shadow: 4px 4px 0px black; text-transform: uppercase;">
+                    CLEAR
+                </a>
+            {% endif %}
+        </form>
     </div>
 
-    <!-- INTERNSHIP LIST CARD -->
-    <div class="workspace-card" style="padding: 40px;">
-
-        {% if internships %}
-            {% for internship in internships %}
-
-                <div style="
-                    border: 2px solid #111827;
-                    border-radius: 10px;
-                    padding: 25px 30px;
-                    margin-bottom: 25px;
-                    background: #ffffff;
-                    position: relative;
-                ">
-
-                    <!-- VERIFIED BADGE -->
-                    <div style="
-                        position: absolute;
-                        top: 0;
-                        right: 0;
-                        background: var(--brand-blue);
-                        color: white;
-                        padding: 8px 20px;
-                        font-weight: 900;
-                        font-size: 0.65rem;
-                        letter-spacing: 1px;
-                        border-bottom-left-radius: 8px;
-                    ">
-                        VERIFIED NODE
+    <div style="display: grid; grid-template-columns: 1fr; gap: 30px;">
+        {% for internship in internships %}
+            <div class="workspace-card" style="padding: 40px; border: 4px solid black; box-shadow: 12px 12px 0px black; background: white;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h2 style="margin: 0; font-size: 2.2rem; font-weight: 900; letter-spacing: -1px;">{{ internship.title }}</h2>
+                        <p style="margin: 10px 0; font-weight: 800; color: #4a90e2; text-transform: uppercase;">
+                            {{ internship.company_name }} | {{ internship.location }}
+                        </p>
                     </div>
-
-                    <!-- COMPANY NAME -->
-                    <p style="
-                        color: var(--brand-blue);
-                        font-weight: 900;
-                        font-size: 0.8rem;
-                        margin-bottom: 5px;
-                        text-transform: uppercase;
-                    ">
-                        {{ internship.company_name }}
-                    </p>
-
-                    <!-- INTERNSHIP TITLE -->
-                    <h2 style="
-                        font-size: 2rem;
-                        font-weight: 900;
-                        color: var(--brand-dark);
-                        margin-bottom: 15px;
-                    ">
-                        {{ internship.title }}
-                    </h2>
-
-                    <!-- META INFO -->
-                    <div style="
-                        display: flex;
-                        gap: 40px;
-                        margin-bottom: 20px;
-                        flex-wrap: wrap;
-                        font-size: 0.9rem;
-                        font-weight: 700;
-                    ">
-                        <span>📍 {{ internship.location }}</span>
-                        <span style="color: #10b981;">💰 {{ internship.stipend }}</span>
-                        <span>⏳ Apply by {{ internship.deadline }}</span>
+                    <div style="text-align: right;">
+                        <p style="margin: 0; font-weight: 900; font-size: 1.4rem;">{{ internship.stipend }}</p>
+                        <p style="margin: 5px 0 0; font-size: 0.8rem; color: #ef4444; font-weight: 900;">DEADLINE: {{ internship.deadline }}</p>
                     </div>
-
-                    <!-- SKILLS -->
-                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
-                        {% for skill in internship.required_skills.split %}
-                            <span style="
-                                background: #eff6ff;
-                                color: var(--brand-blue);
-                                padding: 6px 14px;
-                                border: 1px solid var(--brand-blue);
-                                border-radius: 20px;
-                                font-weight: 800;
-                                font-size: 0.7rem;
-                            ">
-                                {{ skill }}
-                            </span>
-                        {% endfor %}
-                    </div>
-
-                    <!-- ACTION BUTTON -->
-                    <a href="{% url 'internship_detail' internship.pk %}"
-                       class="btn-primary"
-                       style="
-                            display: inline-block;
-                            padding: 12px 30px;
-                            border-radius: 6px;
-                            text-decoration: none;
-                            font-weight: 800;
-                       ">
-                        VIEW NODE →
-                    </a>
-
                 </div>
 
-            {% endfor %}
-        {% else %}
+                <div style="margin-top: 25px; border-top: 2px solid #eee; padding-top: 20px;">
+                    <p style="font-weight: 900; font-size: 0.75rem; color: #9ca3af; text-transform: uppercase; margin-bottom: 8px;">Required Skills</p>
+                    <p style="font-weight: 700; font-size: 1.1rem;">{{ internship.required_skills }}</p>
+                </div>
 
-            <!-- EMPTY STATE -->
-            <div style="
-                text-align: center;
-                padding: 60px 20px;
-                font-weight: 900;
-                color: #9ca3af;
-                letter-spacing: 1px;
-            ">
-                NO ACTIVE NODES DETECTED IN THE SYSTEM.
+                <div style="margin-top: 35px;">
+                    <a href="{% url 'internship_detail' internship.pk %}" class="brutalist-btn btn-apply-blue"
+                       style="display: inline-block; padding: 18px 45px; background: #2563eb; color: white; border: 3px solid black; text-decoration: none; font-weight: 900; font-size: 1rem; text-transform: uppercase; box-shadow: 6px 6px 0px black;">
+                        APPLY NOW →
+                    </a>
+                </div>
             </div>
-
-        {% endif %}
-
+        {% endfor %}
     </div>
 </div>
-
 {% endblock %}
