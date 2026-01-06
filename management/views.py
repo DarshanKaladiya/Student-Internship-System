@@ -79,6 +79,7 @@ def faculty_register(request):
 
 @login_required
 def student_edit_profile(request):
+    """ Allows students to update their academic identity record. """
     profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':
         profile.full_name = request.POST.get('full_name')
@@ -124,12 +125,8 @@ def post_internship(request):
 
 
 def internship_list(request):
-    """
-    Displays internship nodes with search/filter functionality.
-    """
     query = request.GET.get('q')
     if query:
-        # Filters by Title, Company, or Skills using OR logic
         internships = Internship.objects.filter(
             Q(title__icontains=query) | 
             Q(company_name__icontains=query) | 
@@ -186,10 +183,16 @@ def reject_application(request, pk):
 
 @login_required
 def student_dashboard(request):
+    """ Fetches profile data and featured nodes for the dashboard. """
     applications = Application.objects.filter(student=request.user)
+    profile = get_object_or_404(UserProfile, user=request.user)
+    featured_nodes = Internship.objects.all().order_by('-id')[:3]
+    
     return render(request, 'management/student_dashboard.html', {
         'applications': applications,
-        'total_apps': applications.count()
+        'total_apps': applications.count(),
+        'featured_nodes': featured_nodes,
+        'profile': profile
     })
 
 
