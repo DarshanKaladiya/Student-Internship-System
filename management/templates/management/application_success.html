@@ -1,0 +1,15 @@
+{% extends 'management/base.html' %}
+{% block content %}
+<div style="max-width: 600px; margin: 100px auto; text-align: center;">
+    <div class="workspace-card" style="padding: 60px; border: 5px solid black; box-shadow: 15px 15px 0px #10b981; background: white;">
+        <div style="width: 80px; height: 80px; background: #10b981; border: 4px solid black; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center;">
+            <span style="color: white; font-size: 3rem; font-weight: 900;">✓</span>
+        </div>
+        <h1 style="font-size: 3rem; font-weight: 900; margin: 0; letter-spacing: -2px; text-transform: uppercase;">SIGNAL <span style="color: #10b981;">DEPLOYED</span></h1>
+        <p style="font-weight: 800; color: #6b7280; margin: 25px 0; font-size: 1.1rem;">Your application and resume have been transmitted to the faculty board.</p>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <a href="{% url 'student_dashboard' %}" style="padding: 15px; background: black; color: white; text-decoration: none; font-weight: 900; text-transform: uppercase; border: 3px solid black; box-shadow: 5px 5px 0px #4a90e2;">RETURN TO DASHBOARD</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

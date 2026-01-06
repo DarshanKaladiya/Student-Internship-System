@@ -1,36 +1,25 @@
 {% extends 'management/base.html' %}
 {% block content %}
-<div class="workspace-card" style="max-width: 750px; margin: 0 auto; padding: 45px;">
-    <h2 style="font-weight: 900; font-size: 2rem; margin-bottom: 30px;">ACADEMIC IDENTITY HUB</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <div style="margin-bottom: 20px;">
-            <label style="display: block; font-weight: 800; font-size: 0.75rem; text-transform: uppercase;">FULL NAME</label>
-            <input type="text" name="full_name" value="{{ profile.full_name|default:'' }}" style="width: 100%; padding: 12px; border: 3px solid black; font-weight: 700;">
+<div class="workspace-card" style="max-width: 700px; margin: 0 auto; padding: 40px; border: 4px solid black; box-shadow: 10px 10px 0px black;">
+    <h2 style="font-weight: 900; text-transform: uppercase;">Edit Identity Hub</h2>
+    <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: 800; font-size: 0.7rem;">FULL NAME</label>
+            <input type="text" name="full_name" value="{{ profile.full_name|default:'' }}" style="width: 100%; padding: 10px; border: 3px solid black;">
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: 800; font-size: 0.7rem;">COLLEGE/UNIVERSITY</label>
+            <input type="text" name="academy_name" value="{{ profile.academy_name|default:'' }}" style="width: 100%; padding: 10px; border: 3px solid black;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <input type="text" name="major" placeholder="Major" value="{{ profile.major|default:'' }}" style="padding: 10px; border: 3px solid black;">
+            <input type="number" step="0.01" name="gpa" placeholder="GPA" value="{{ profile.gpa|default:'' }}" style="padding: 10px; border: 3px solid black;">
         </div>
         <div style="margin-bottom: 20px;">
-            <label style="display: block; font-weight: 800; font-size: 0.75rem; text-transform: uppercase;">COLLEGE/UNIVERSITY</label>
-            <input type="text" name="academy_name" value="{{ profile.academy_name|default:'' }}" style="width: 100%; padding: 12px; border: 3px solid black; font-weight: 700;">
+            <label style="display: block; font-weight: 800; font-size: 0.7rem;">RESUME (PDF ONLY)</label>
+            <input type="file" name="resume" style="width: 100%; padding: 10px; border: 3px solid black; background: white;">
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-            <div>
-                <label style="display: block; font-weight: 800; font-size: 0.75rem; text-transform: uppercase;">MAJOR</label>
-                <input type="text" name="major" value="{{ profile.major|default:'' }}" style="width: 100%; padding: 12px; border: 3px solid black; font-weight: 700;">
-            </div>
-            <div>
-                <label style="display: block; font-weight: 800; font-size: 0.75rem; text-transform: uppercase;">GPA</label>
-                <input type="number" step="0.01" name="gpa" value="{{ profile.gpa|default:'' }}" style="width: 100%; padding: 12px; border: 3px solid black; font-weight: 700;">
-            </div>
-        </div>
-        <div style="margin-bottom: 20px;">
-            <label style="display: block; font-weight: 800; font-size: 0.75rem; text-transform: uppercase;">SKILLS (COMMA SEPARATED)</label>
-            <input type="text" name="skills" value="{{ profile.skills|default:'' }}" style="width: 100%; padding: 12px; border: 3px solid black; font-weight: 700;">
-        </div>
-        <div style="margin-bottom: 30px;">
-            <label style="display: block; font-weight: 800; font-size: 0.75rem; text-transform: uppercase;">BIO / INTRODUCTION</label>
-            <textarea name="bio" rows="4" style="width: 100%; padding: 12px; border: 3px solid black; font-weight: 700; font-family: inherit;">{{ profile.bio|default:'' }}</textarea>
-        </div>
-        <button type="submit" style="width: 100%; padding: 20px; background: black; color: white; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; border-radius: 4px;">SAVE IDENTITY RECORD</button>
+        <button type="submit" style="width: 100%; padding: 15px; background: black; color: white; font-weight: 900; border: none; cursor: pointer;">SAVE IDENTITY RECORD</button>
     </form>
 </div>
 {% endblock %}
