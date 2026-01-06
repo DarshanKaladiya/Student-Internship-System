@@ -3,39 +3,28 @@
 
 <div class="dashboard-container" style="max-width: 1200px; margin: 0 auto;">
 
-    <!-- HEADER -->
     <div style="margin-bottom: 40px;">
-        <h1 class="main-header">
-            FACULTY<br>
-            <span class="highlight-blue">COMMAND BOARD</span>
-        </h1>
-        <p style="font-weight: 600; color: #6b7280; margin-top: 10px;">
-            Manage deployed nodes and applicant signals.
-        </p>
+        <h1 class="main-header">FACULTY<br><span class="highlight-blue">COMMAND BOARD</span></h1>
+        <p style="font-weight: 600; color: #6b7280; margin-top: 10px;">Manage deployed nodes and applicant signals.</p>
     </div>
 
-    <!-- STATS -->
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 50px;">
         <div class="workspace-card" style="padding: 30px; text-align: center;">
             <p style="font-weight: 800; color: #9ca3af;">TOTAL NODES</p>
             <h2 style="font-size: 2.5rem;">{{ total_nodes }}</h2>
         </div>
-
         <div class="workspace-card" style="padding: 30px; text-align: center;">
             <p style="font-weight: 800; color: #9ca3af;">PENDING SIGNALS</p>
             <h2 style="font-size: 2.5rem;">{{ pending_signals }}</h2>
         </div>
-
         <div class="workspace-card" style="padding: 30px; text-align: center;">
             <p style="font-weight: 800; color: #9ca3af;">SYSTEM STATUS</p>
             <h2 style="font-size: 2.5rem; color: #10b981;">ONLINE</h2>
         </div>
     </div>
 
-    <!-- APPLICANT SIGNALS -->
     <h3 style="font-weight: 900; margin-bottom: 15px;">APPLICANT SIGNALS</h3>
     <div class="workspace-card" style="padding: 25px; margin-bottom: 50px;">
-
         {% if applications %}
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
@@ -49,97 +38,44 @@
                     {% for app in applications %}
                     <tr style="border-bottom: 1px solid #eee;">
                         <td style="padding: 15px 0; font-weight: 700;">
-                            {{ app.student.username }}
+                            <a href="{% url 'view_student_profile' app.student.pk %}" style="color: black; text-decoration: none;">
+                                {{ app.student.userprofile.full_name|default:app.student.username }}
+                                <span style="font-size: 0.7rem; color: #4a90e2; margin-left: 5px;">[VIEW PROFILE]</span>
+                            </a>
                         </td>
-                        <td style="font-weight: 700;">
-                            {{ app.internship.title }}
-                        </td>
+                        <td style="font-weight: 700;">{{ app.internship.title }}</td>
                         <td align="center">
-
-                            <!-- APPROVE -->
-                            <form method="POST"
-                                  action="{% url 'approve_application' app.pk %}"
-                                  style="display: inline-block;">
+                            <form method="POST" action="{% url 'approve_application' app.pk %}" style="display: inline-block;">
                                 {% csrf_token %}
-                                <button type="submit"
-                                        style="
-                                            padding: 6px 14px;
-                                            background: #10b981;
-                                            color: white;
-                                            border: none;
-                                            border-radius: 4px;
-                                            font-weight: 800;
-                                            cursor: pointer;
-                                        ">
-                                    APPROVE
-                                </button>
+                                <button type="submit" style="padding: 6px 14px; background: #10b981; color: white; border: none; border-radius: 4px; font-weight: 800; cursor: pointer;">APPROVE</button>
                             </form>
-
-                            <!-- REJECT -->
-                            <form method="POST"
-                                  action="{% url 'reject_application' app.pk %}"
-                                  style="display: inline-block; margin-left: 8px;">
+                            <form method="POST" action="{% url 'reject_application' app.pk %}" style="display: inline-block; margin-left: 8px;">
                                 {% csrf_token %}
-                                <button type="submit"
-                                        style="
-                                            padding: 6px 14px;
-                                            background: #ef4444;
-                                            color: white;
-                                            border: none;
-                                            border-radius: 4px;
-                                            font-weight: 800;
-                                            cursor: pointer;
-                                        ">
-                                    REJECT
-                                </button>
+                                <button type="submit" style="padding: 6px 14px; background: #ef4444; color: white; border: none; border-radius: 4px; font-weight: 800; cursor: pointer;">REJECT</button>
                             </form>
-
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p style="text-align: center; color: #9ca3af; font-weight: 800;">
-                NO PENDING SIGNALS DETECTED.
-            </p>
+            <p style="text-align: center; color: #9ca3af; font-weight: 800;">NO PENDING SIGNALS DETECTED.</p>
         {% endif %}
-
     </div>
 
-    <!-- MY DEPLOYED NODES -->
     <h3 style="font-weight: 900; margin-bottom: 15px;">MY DEPLOYED NODES</h3>
     <div class="workspace-card" style="padding: 30px;">
-
         {% if internships %}
             {% for internship in internships %}
-                <div style="
-                    border: 2px solid #111827;
-                    border-radius: 10px;
-                    padding: 20px;
-                    margin-bottom: 20px;
-                ">
+                <div style="border: 2px solid #111827; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
                     <h3 style="font-weight: 900;">{{ internship.title }}</h3>
-                    <p style="color: #6b7280; font-weight: 600;">
-                        {{ internship.location }} |
-                        Deadline: {{ internship.deadline }}
-                    </p>
-
-                    <a href="{% url 'internship_detail' internship.pk %}"
-                       class="btn-primary"
-                       style="margin-top: 10px; display: inline-block;">
-                        VIEW NODE →
-                    </a>
+                    <p style="color: #6b7280; font-weight: 600;">{{ internship.location }} | Deadline: {{ internship.deadline }}</p>
+                    <a href="{% url 'internship_detail' internship.pk %}" class="btn-primary" style="margin-top: 10px; display: inline-block;">VIEW NODE →</a>
                 </div>
             {% endfor %}
         {% else %}
-            <p style="text-align: center; color: #9ca3af; font-weight: 800;">
-                NO DEPLOYED NODES FOUND.
-            </p>
+            <p style="text-align: center; color: #9ca3af; font-weight: 800;">NO DEPLOYED NODES FOUND.</p>
         {% endif %}
-
     </div>
-
 </div>
-
 {% endblock %}

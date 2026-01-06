@@ -12,9 +12,6 @@ from .forms import InternshipPostForm
 # ---------------- HOME ----------------
 
 def home_landing(request):
-    """
-    Redirects users based on their role after authentication.
-    """
     if request.user.is_authenticated:
         try:
             profile = UserProfile.objects.get(user=request.user)
@@ -26,12 +23,9 @@ def home_landing(request):
     return render(request, 'management/home.html')
 
 
-# ---------------- AUTH ----------------
+# ---------------- AUTH & REGISTRATION ----------------
 
 def login_view(request):
-    """
-    Handles user login and redirects to the landing controller.
-    """
     if request.method == 'POST':
         user = authenticate(
             username=request.POST.get('username'),
@@ -45,19 +39,11 @@ def login_view(request):
 
 
 def logout_user(request):
-    """
-    Logs out the user and returns to the home screen.
-    """
     logout(request)
     return redirect('home_landing')
 
 
-# ---------------- REGISTRATION ----------------
-
 def student_register(request):
-    """
-    Registers a new student and creates their UserProfile.
-    """
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -74,9 +60,6 @@ def student_register(request):
 
 
 def faculty_register(request):
-    """
-    Registers a new faculty member and assigns the FACULTY role.
-    """
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -91,15 +74,12 @@ def faculty_register(request):
     return render(request, 'management/faculty_register.html', {'form': form})
 
 
-# ---------------- PROFILE MANAGEMENT ----------------
+# ---------------- ✅ PROFILE MANAGEMENT ----------------
 
 @login_required
 def student_edit_profile(request):
-    """
-    Allows students to update their academic and bio details.
-    """
+    """ Allows students to add/update their academic identity record. """
     profile = get_object_or_404(UserProfile, user=request.user)
-    
     if request.method == 'POST':
         profile.full_name = request.POST.get('full_name')
         profile.academy_name = request.POST.get('academy_name')
@@ -108,17 +88,14 @@ def student_edit_profile(request):
         profile.skills = request.POST.get('skills')
         profile.bio = request.POST.get('bio')
         profile.save()
-        messages.success(request, "Academic identity record saved.")
+        messages.success(request, "Academic profile updated successfully.")
         return redirect('student_dashboard')
-        
     return render(request, 'management/edit_profile.html', {'profile': profile})
 
 
 @login_required
 def view_student_profile(request, pk):
-    """
-    Allows Faculty to view a student's profile during application review.
-    """
+    """ Allows Faculty to check student details before approving an application. """
     student_user = get_object_or_404(User, pk=pk)
     profile = get_object_or_404(UserProfile, user=student_user)
     return render(request, 'management/view_profile.html', {'profile': profile})
@@ -128,11 +105,7 @@ def view_student_profile(request, pk):
 
 @login_required
 def post_internship(request):
-    """
-    Allows faculty to deploy new internship nodes to the network.
-    """
     profile = UserProfile.objects.get(user=request.user)
-
     if profile.role != 'FACULTY':
         messages.error(request, "Only faculty can post internships.")
         return redirect('student_dashboard')
@@ -152,9 +125,6 @@ def post_internship(request):
 
 
 def internship_list(request):
-    """
-    Displays all active internship nodes available in the system.
-    """
     internships = Internship.objects.all()
     return render(request, 'management/internship_list.html', {
         'internships': internships
@@ -162,9 +132,6 @@ def internship_list(request):
 
 
 def internship_detail(request, pk):
-    """
-    Displays full details for a specific internship node.
-    """
     internship = get_object_or_404(Internship, pk=pk)
     return render(request, 'management/internship_detail.html', {
         'internship': internship
@@ -173,9 +140,6 @@ def internship_detail(request, pk):
 
 @login_required
 def apply_internship(request, pk):
-    """
-    Creates a pending application signal for a student.
-    """
     internship = get_object_or_404(Internship, pk=pk)
     Application.objects.get_or_create(
         student=request.user,
@@ -189,9 +153,6 @@ def apply_internship(request, pk):
 
 @login_required
 def approve_application(request, pk):
-    """
-    Approves a student's application signal.
-    """
     application = get_object_or_404(
         Application,
         pk=pk,
@@ -205,9 +166,6 @@ def approve_application(request, pk):
 
 @login_required
 def reject_application(request, pk):
-    """
-    Rejects a student's application signal.
-    """
     application = get_object_or_404(
         Application,
         pk=pk,
@@ -223,9 +181,6 @@ def reject_application(request, pk):
 
 @login_required
 def student_dashboard(request):
-    """
-    Displays the student's identity hub and application signals.
-    """
     applications = Application.objects.filter(student=request.user)
     return render(request, 'management/student_dashboard.html', {
         'applications': applications,
@@ -235,9 +190,6 @@ def student_dashboard(request):
 
 @login_required
 def faculty_dashboard(request):
-    """
-    Displays the faculty command board, nodes, and pending signals.
-    """
     internships = Internship.objects.filter(faculty=request.user)
     applications = Application.objects.filter(
         internship__faculty=request.user,

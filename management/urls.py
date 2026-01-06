@@ -21,7 +21,7 @@ urlpatterns = [
     path('profile/view/<int:pk>/', views.view_student_profile, name='view_student_profile'),
 
     # Internship
-    path('post/', views.post_internship, name='post_internship'), # Fixed name for NoReverseMatch
+    path('post/', views.post_internship, name='post_internship'), # Fixed for NoReverseMatch
     path('internships/', views.internship_list, name='internship_list'),
     path('internships/<int:pk>/', views.internship_detail, name='internship_detail'),
     path('apply/<int:pk>/', views.apply_internship, name='apply_internship'),
