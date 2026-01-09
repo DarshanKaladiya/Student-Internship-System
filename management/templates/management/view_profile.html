@@ -1,23 +1,124 @@
 {% extends 'management/base.html' %}
 {% block content %}
-<div class="workspace-card" style="max-width: 800px; margin: 0 auto; padding: 50px; border: 4px solid black; box-shadow: 15px 15px 0px black;">
-    <h1 style="font-weight: 900; font-size: 3rem; margin: 0;">{{ profile.full_name|default:profile.user.username }}</h1>
-    <p style="font-weight: 800; color: #4a90e2; text-transform: uppercase;">{{ profile.academy_name }} | Major: {{ profile.major }}</p>
+
+<style>
+    /* Premium Hover Animations */
+    .btn-approve {
+        display: inline-block;
+        padding: 20px 60px;
+        background: #000000; /* Darker base for high contrast */
+        color: #ffffff;
+        border: 4px solid #000000;
+        font-weight: 900;
+        text-decoration: none;
+        text-transform: uppercase;
+        box-shadow: 8px 8px 0px #10b981; /* Green shadow to indicate approval */
+        transition: all 0.2s ease;
+        cursor: pointer;
+        font-size: 1.1rem;
+    }
+
+    .btn-approve:hover {
+        background: #10b981; /* Changes to vibrant green on hover */
+        transform: translate(-4px, -4px);
+        box-shadow: 12px 12px 0px #000000;
+        color: #000000;
+    }
+
+    .btn-reject {
+        display: inline-block;
+        padding: 20px 40px;
+        background: white;
+        color: #ef4444;
+        border: 4px solid #ef4444;
+        font-weight: 900;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-reject:hover {
+        background: #ef4444;
+        color: white;
+        transform: translate(-2px, -2px);
+        box-shadow: 4px 4px 0px #000000;
+    }
+
+    .resume-link {
+        display: block;
+        background: black;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: 900;
+        text-transform: uppercase;
+        border: 4px solid black;
+        transition: 0.2s;
+    }
+
+    .resume-link:hover {
+        background: #4a90e2; /* Blue hover for the resume */
+        box-shadow: 6px 6px 0px black;
+    }
+</style>
+
+<div class="dashboard-container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
     
-    <div style="margin: 30px 0; border-top: 3px solid black; padding-top: 20px;">
-        <h4 style="font-weight: 900;">CANDIDATE BIO</h4>
-        <p>{{ profile.bio|default:"No bio provided." }}</p>
+    <div style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="font-weight: 900; text-transform: uppercase; margin: 0;">COMPARISON <span class="highlight-blue">INTELLIGENCE</span></h1>
+        <a href="{% url 'faculty_dashboard' %}" style="font-weight: 900; color: black; text-decoration: none; border: 3px solid black; padding: 10px 20px;">← BACK TO BOARD</a>
     </div>
 
-    {% if profile.resume %}
-    <div style="background: #fef3c7; border: 3px solid #f59e0b; padding: 20px; text-align: center;">
-        <p style="font-weight: 800; margin-bottom: 10px;">RESUME DETECTED</p>
-        <a href="{{ profile.resume.url }}" target="_blank" style="background: black; color: white; padding: 10px 20px; text-decoration: none; font-weight: 900;">DOWNLOAD PDF ↓</a>
-    </div>
-    {% endif %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+        
+        <div class="workspace-card" style="padding: 40px; border: 4px solid black; background: #f8fafc;">
+            <p style="font-weight: 900; color: #9ca3af; font-size: 0.75rem; text-transform: uppercase;">NODE REQUIREMENTS</p>
+            <h2 style="font-weight: 900; margin: 20px 0;">{{ internship.title }}</h2>
+            
+            <div style="margin-top: 30px;">
+                <p style="font-weight: 900; font-size: 0.8rem; color: #4a90e2;">REQUIRED ARSENAL:</p>
+                <p style="font-size: 1.2rem; font-weight: 800;">{{ internship.required_skills }}</p>
+            </div>
 
-    <div style="margin-top: 40px;">
-        <a href="{% url 'faculty_dashboard' %}" style="font-weight: 900; color: black;">← BACK TO COMMAND BOARD</a>
+            <div style="margin-top: 30px; border-top: 3px solid black; padding-top: 25px;">
+                <p style="font-size: 1rem; line-height: 1.6; color: #374151;">{{ internship.description|truncatewords:60 }}</p>
+            </div>
+        </div>
+
+        <div class="workspace-card" style="padding: 40px; border: 4px solid #10b981; background: white;">
+            <p style="font-weight: 900; color: #10b981; font-size: 0.75rem; text-transform: uppercase;">APPLICANT IDENTITY</p>
+            <h2 style="font-weight: 900; margin: 20px 0;">{{ profile.full_name|default:profile.user.username }}</h2>
+            
+            <p style="font-weight: 800; font-size: 1.1rem; color: black;">
+                {{ profile.major|default:"Not Specified" }} | GPA: {{ profile.gpa|default:"N/A" }}
+            </p>
+
+            <div style="margin-top: 30px;">
+                <p style="font-weight: 900; font-size: 0.8rem; color: #10b981;">REPORTED SKILLS:</p>
+                <p style="font-size: 1.2rem; font-weight: 800;">{{ profile.skills|default:"None listed" }}</p>
+            </div>
+
+            {% if profile.resume %}
+            <div style="margin-top: 40px;">
+                <a href="{{ profile.resume.url }}" target="_blank" class="resume-link">
+                    VIEW RESUME PDF ↓
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="margin-top: 50px; border-top: 5px solid black; padding-top: 50px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+        <a href="{% url 'approve_application' application.pk %}" class="btn-approve">
+            APPROVE SIGNAL
+        </a>
+        
+        <a href="{% url 'reject_application' application.pk %}" class="btn-reject">
+            REJECT
+        </a>
     </div>
 </div>
+
 {% endblock %}

@@ -10,7 +10,8 @@ urlpatterns = [
     path('student/dashboard/', views.student_dashboard, name='student_dashboard'),
     path('faculty/dashboard/', views.faculty_dashboard, name='faculty_dashboard'),
     path('profile/edit/', views.student_edit_profile, name='student_edit_profile'),
-    path('profile/view/<int:pk>/', views.view_student_profile, name='view_student_profile'),
+    # Comparison View URL
+    path('profile/view/<int:student_pk>/<int:internship_pk>/', views.view_student_profile, name='view_student_profile'),
     path('post/', views.post_internship, name='post_internship'),
     path('internships/', views.internship_list, name='internship_list'),
     path('internships/<int:pk>/', views.internship_detail, name='internship_detail'),
