@@ -1,62 +1,129 @@
 {% extends 'management/base.html' %}
 {% block content %}
-<div class="landing-grid" style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 50px;">
-    
-    <div class="hero-text">
-        <h1 class="main-header">THE INTERNLY<br><span class="highlight-blue">SYNC SYSTEM</span></h1>
-        <p style="margin: 25px 0; font-size: 1.15rem; color: #4b5563; line-height: 1.6; font-weight: 500;">
-            A high-efficiency digital architecture built to synchronize students with institutional internship nodes. 
-            We replace manual paperwork with a permanent technical record.
-        </p>
 
-        <div class="process-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px;">
-            <div class="workspace-card" style="padding: 20px; text-align: center;">
-                <h4 style="color: var(--brand-blue); font-size: 1.5rem;">01</h4>
-                <p style="font-weight: 800; font-size: 0.8rem;">IDENTITY SYNC</p>
-            </div>
-            <div class="workspace-card" style="padding: 20px; text-align: center; background: #eff6ff;">
-                <h4 style="color: var(--brand-blue); font-size: 1.5rem;">02</h4>
-                <p style="font-weight: 800; font-size: 0.8rem;">FACULTY VETTING</p>
-            </div>
-            <div class="workspace-card" style="padding: 20px; text-align: center;">
-                <h4 style="color: var(--brand-blue); font-size: 1.5rem;">03</h4>
-                <p style="font-weight: 800; font-size: 0.8rem;">LIVE DEPLOYMENT</p>
+<style>
+    /* Industrial Pulsing Status */
+    .status-pulse {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: #10b981;
+        border-radius: 50%;
+        margin-right: 8px;
+        box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+        animation: pulse-green 2s infinite;
+    }
+    @keyframes pulse-green {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* Metric Card Hover */
+    .metric-card {
+        background: white;
+        border: 4px solid black;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 10px 10px 0px black;
+        transition: all 0.2s ease;
+    }
+    .metric-card:hover {
+        transform: translate(-5px, -5px);
+        box-shadow: 15px 15px 0px #2563eb;
+    }
+
+    /* Trust Badge Styling */
+    .trust-badge {
+        display: inline-block;
+        background: #f1f5f9;
+        border: 2px solid black;
+        padding: 5px 12px;
+        font-weight: 900;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="dashboard-container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 50px; flex-wrap: wrap;">
+        
+        <div style="flex: 1; min-width: 350px;">
+            <h1 style="font-size: 5rem; font-weight: 900; line-height: 0.85; margin: 0; letter-spacing: -3px; text-transform: uppercase;">
+                THE INTERNLY<br><span class="highlight-blue">SYNC SYSTEM</span>
+            </h1>
+            <p style="font-weight: 700; color: #6b7280; font-size: 1.3rem; margin: 35px 0; max-width: 600px; line-height: 1.4;">
+                The high-efficiency architecture built to synchronize academic talent with institutional internship nodes. 
+                Replace manual paperwork with a <span style="color: black; border-bottom: 4px solid #2563eb;">permanent technical record</span>.
+            </p>
+
+            <div style="display: flex; gap: 20px; margin-top: 50px; flex-wrap: wrap;">
+                <div class="metric-card">
+                    <span style="font-size: 3.5rem; font-weight: 900; display: block;">{{ node_count }}</span>
+                    <span style="font-weight: 800; color: #9ca3af; text-transform: uppercase; font-size: 0.75rem;">Active Nodes</span>
+                </div>
+                <div class="metric-card">
+                    <span style="font-size: 3.5rem; font-weight: 900; display: block;">{{ user_count }}</span>
+                    <span style="font-weight: 800; color: #9ca3af; text-transform: uppercase; font-size: 0.75rem;">Synced Users</span>
+                </div>
+                <div class="metric-card">
+                    <span style="font-size: 3.5rem; font-weight: 900; display: block;">{{ vetting_rate }}</span>
+                    <span style="font-weight: 800; color: #9ca3af; text-transform: uppercase; font-size: 0.75rem;">Vetting Rate</span>
+                </div>
             </div>
         </div>
 
-        <div class="workspace-card">
-            <h3 style="margin-bottom: 20px; color: #111827; font-weight: 900;">HOW IT WORKS</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div>
-                    <h5 style="color: var(--brand-blue); margin-bottom: 8px;">FOR STUDENTS</h5>
-                    <p style="font-size: 0.9rem; opacity: 0.8;">Build a verifiable profile that updates in real-time. No more re-uploading resumes; your 'Identity Node' speaks for itself.</p>
-                </div>
-                <div>
-                    <h5 style="color: var(--brand-blue); margin-bottom: 8px;">FOR FACULTY</h5>
-                    <p style="font-size: 0.9rem; opacity: 0.8;">Deploy vetted internship signals to a curated student body. Review and approve applications through a high-contrast dashboard.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="auth-section">
-        <div class="workspace-card" style="position: sticky; top: 60px;">
-            <h2 style="font-size: 2rem; font-weight: 900; margin-bottom: 10px;">SECURE</h2>
-            <div style="background: var(--brand-blue); color: white; padding: 10px; font-weight: 900; border-radius: 4px; margin-bottom: 30px; text-align: center;">
-                AUTHORIZATION
-            </div>
+        <div class="workspace-card" style="width: 420px; padding: 45px; background: white; border-width: 5px;">
+            <h2 style="font-weight: 900; margin-top: 0; font-size: 2.5rem; letter-spacing: -1px; text-transform: uppercase;">SECURE</h2>
             
-            <p style="font-size: 0.85rem; font-weight: 700; color: #6b7280; margin-bottom: 20px;">NOT REGISTERED YET?</p>
-            <div style="display: flex; flex-direction: column; gap: 15px;">
-                <a href="{% url 'register' %}" class="btn-outline">STUDENT SIGNUP</a>
-                <a href="{% url 'faculty_register' %}" class="btn-primary">FACULTY SIGNUP</a>
+            <div style="margin-top: 35px; display: flex; flex-direction: column; gap: 20px;">
+                <a href="{% url 'login' %}" style="display: block; background: #2563eb; color: white; text-align: center; padding: 18px; text-decoration: none; font-weight: 900; text-transform: uppercase; border: 4px solid black; box-shadow: 6px 6px 0px black;">
+                    AUTHORIZATION
+                </a>
+                
+                <p style="font-weight: 900; color: #9ca3af; font-size: 0.8rem; margin: 15px 0 0; text-transform: uppercase;">Infrastructure Enrollment</p>
+                <a href="{% url 'register' %}" style="display: block; background: white; color: black; text-align: center; padding: 15px; text-decoration: none; font-weight: 900; border: 3px solid black; box-shadow: 5px 5px 0px black; text-transform: uppercase;">
+                    STUDENT SIGNUP
+                </a>
+                <a href="{% url 'faculty_register' %}" style="display: block; background: #4a90e2; color: white; text-align: center; padding: 15px; text-decoration: none; font-weight: 900; border: 3px solid black; box-shadow: 5px 5px 0px black; text-transform: uppercase;">
+                    FACULTY SIGNUP
+                </a>
             </div>
 
-            <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px;">
-                <h4 style="font-size: 0.9rem; margin-bottom: 10px;">SYSTEM STATUS</h4>
-                <p style="font-size: 0.8rem; color: #10b981; font-weight: 700;">● ALL SYSTEMS OPERATIONAL</p>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
+                <p style="font-weight: 900; font-size: 0.8rem; color: #10b981; display: flex; align-items: center;">
+                    <span class="status-pulse"></span> SYSTEM STATUS: OPERATIONAL
+                </p>
             </div>
         </div>
     </div>
+
+    <div style="margin-top: 100px; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
+        <div class="workspace-card" style="padding: 40px; border-color: black;">
+            <div class="trust-badge">Step 01</div>
+            <h3 style="font-weight: 900; font-size: 1.5rem; margin-top: 5px; text-transform: uppercase; color: #2563eb;">Identity Sync</h3>
+            <p style="font-weight: 700; color: #6b7280; line-height: 1.6;">
+                Build a verifiable technical profile. Your 'Identity Node' tracks skills in real-time, eliminating the need for constant resume re-uploads.
+            </p>
+        </div>
+        <div class="workspace-card" style="padding: 40px; border-color: black;">
+            <div class="trust-badge">Step 02</div>
+            <h3 style="font-weight: 900; font-size: 1.5rem; margin-top: 5px; text-transform: uppercase; color: #4a90e2;">Faculty Vetting</h3>
+            <p style="font-weight: 700; color: #6b7280; line-height: 1.6;">
+                Institutional mentors review signals through a high-contrast Comparison Intelligence dashboard to ensure node requirements are met.
+            </p>
+        </div>
+        <div class="workspace-card" style="padding: 40px; border-color: black;">
+            <div class="trust-badge">Step 03</div>
+            <h3 style="font-weight: 900; font-size: 1.5rem; margin-top: 5px; text-transform: uppercase; color: #10b981;">Live Deployment</h3>
+            <p style="font-weight: 700; color: #6b7280; line-height: 1.6;">
+                Approved students are deployed directly into internship nodes, starting their journey with a verifiable professional history.
+            </p>
+        </div>
+    </div>
+
 </div>
+
 {% endblock %}
