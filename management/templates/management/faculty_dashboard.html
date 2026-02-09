@@ -1,59 +1,89 @@
 {% extends 'management/base.html' %}
 {% block content %}
-<div class="dashboard-container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+
+<div style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
     
-    <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px;">
         <div>
-            <h1 style="font-weight: 900; text-transform: uppercase; margin: 0; line-height: 1; font-size: 3rem;">FACULTY<br><span class="highlight-blue">COMMAND BOARD</span></h1>
-            <p style="font-weight: 700; color: #6b7280; margin-top: 10px;">COMMANDER: {{ profile.full_name|default:user.username }}</p>
+            <p class="industrial-label" style="background: var(--sync-neon); color: black;">Faculty_Command_Center</p>
+            <h1 style="font-size: 3.5rem; font-weight: 950; letter-spacing: -3px; margin: 10px 0 0; text-transform: uppercase;">Control_Panel</h1>
         </div>
-        <a href="{% url 'post_internship' %}" style="background: black; color: white; padding: 15px 30px; text-decoration: none; font-weight: 900; border: 3px solid black; box-shadow: 6px 6px 0px #4a90e2; text-transform: uppercase;">+ DEPLOY NODE</a>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 50px;">
-        <div class="workspace-card" style="padding: 30px; text-align: center; border: 3px solid black;">
-            <p style="font-weight: 800; color: #9ca3af; font-size: 0.7rem;">TOTAL NODES</p>
-            <h2 style="font-size: 3rem; margin: 0;">{{ total_nodes }}</h2>
-        </div>
-        <div class="workspace-card" style="padding: 30px; text-align: center; border: 3px solid black;">
-            <p style="font-weight: 800; color: #9ca3af; font-size: 0.7rem;">PENDING SIGNALS</p>
-            <h2 style="font-size: 3rem; margin: 0; color: #f59e0b;">{{ pending_signals }}</h2>
-        </div>
-        <div class="workspace-card" style="padding: 30px; text-align: center; border: 3px solid black;">
-            <p style="font-weight: 800; color: #9ca3af; font-size: 0.7rem;">SYSTEM STATUS</p>
-            <h2 style="font-size: 3rem; margin: 0; color: #10b981;">ONLINE</h2>
+        <div style="display: flex; gap: 15px;">
+            <a href="{% url 'edit_faculty_profile' %}" class="sync-btn" style="background: white; color: black; font-size: 0.8rem; padding: 12px 20px; text-decoration: none;">
+                EDIT_PROFILE
+            </a>
+            <a href="{% url 'post_internship' %}" class="sync-btn" style="background: var(--sync-blue); font-size: 0.8rem; padding: 12px 25px; text-decoration: none; color: white;">
+                + POST_NODE
+            </a>
         </div>
     </div>
 
-    <h3 style="font-weight: 900; text-transform: uppercase; margin-bottom: 20px;">APPLICANT SIGNALS</h3>
-    <div class="workspace-card" style="padding: 0; overflow-x: auto; border: 4px solid black;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead style="background: #f8fafc; border-bottom: 4px solid black;">
-                <tr>
-                    <th align="left" style="padding: 20px;">STUDENT IDENTITY</th>
-                    <th align="left" style="padding: 20px;">INTERNSHIP NODE</th>
-                    <th align="right" style="padding: 20px;">ACTION</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for app in applications %}
-                <tr style="border-bottom: 2px solid #eee;">
-                    <td style="padding: 20px; font-weight: 800;">
-                        {{ app.student.userprofile.full_name|default:app.student.username }}
-                    </td>
-                    <td style="padding: 20px; font-weight: 700; color: #4a90e2;">
-                        {{ app.internship.title }}
-                    </td>
-                    <td align="right" style="padding: 20px;">
-                        <a href="{% url 'view_student_profile' app.student.pk app.internship.pk %}" 
-                           style="display: inline-block; padding: 10px 20px; background: #2563eb; color: white; text-decoration: none; font-weight: 900; text-transform: uppercase; border: 2px solid black; box-shadow: 4px 4px 0px black;">
-                            REVIEW SIGNAL →
-                        </a>
-                    </td>
-                </tr>
+    
+
+    <div style="display: grid; grid-template-columns: 1fr 350px; gap: 40px;">
+        
+        <div>
+            <h2 style="font-weight: 950; text-transform: uppercase; font-size: 1.2rem; margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+                <span style="width: 12px; height: 12px; background: var(--sync-neon); display: inline-block; border-radius: 50%;"></span>
+                Incoming_Applicant_Signals
+            </h2>
+
+            {% if applications %}
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    {% for app in applications %}
+                    <div class="brutalist-card" style="padding: 25px; background: white; display: flex; justify-content: space-between; align-items: center; border: 4px solid black; box-shadow: 8px 8px 0px black;">
+                        <div>
+                            <p style="font-weight: 900; font-size: 1.1rem; margin: 0;">{{ app.student.userprofile.full_name|default:app.student.username }}</p>
+                            <p style="font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; margin-top: 5px;">
+                                Node_Target: <span style="color: var(--sync-blue);">{{ app.internship.title }}</span>
+                            </p>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div style="text-align: right;">
+                                <p style="font-size: 0.65rem; font-weight: 900; color: #94a3b8; text-transform: uppercase;">Status</p>
+                                <span style="font-weight: 950; font-size: 0.8rem; {% if app.status == 'APPROVED' %}color: #10b981;{% elif app.status == 'REJECTED' %}color: #ef4444;{% else %}color: #f59e0b;{% endif %}">
+                                    {{ app.status }}
+                                </span>
+                            </div>
+                            <a href="{% url 'view_student_profile' app.student.pk app.internship.pk %}" class="sync-btn" style="padding: 10px 20px; font-size: 0.7rem; background: black; text-decoration: none; color: white;">
+                                VET_SIGNAL
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="border: 4px dashed #cbd5e1; padding: 60px; text-align: center; border-radius: 20px;">
+                    <p style="font-weight: 800; color: #94a3b8; text-transform: uppercase;">Zero activity detected in the applicant network.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <h2 style="font-weight: 950; text-transform: uppercase; font-size: 1.2rem; margin-bottom: 25px;">Active_Nodes</h2>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                {% for node in posted_internships %}
+                <div style="background: #f8fafc; border: 3px solid black; padding: 20px; border-radius: 15px; position: relative; box-shadow: 4px 4px 0px black;">
+                    <p style="font-weight: 950; font-size: 0.9rem; margin: 0; padding-right: 40px;">{{ node.title }}</p>
+                    <p style="font-size: 0.7rem; font-weight: 800; color: #64748b; margin-top: 5px;">
+                        {{ node.application_set.count }} ACTIVE_SIGNALS
+                    </p>
+                    <div style="position: absolute; top: 15px; right: 15px; width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981;"></div>
+                </div>
+                {% empty %}
+                <p style="font-weight: 800; font-size: 0.8rem; color: #94a3b8; text-align: center;">NO_POSTED_NODES_FOUND</p>
                 {% endfor %}
-            </tbody>
-        </table>
+            </div>
+
+            <div class="brutalist-card" style="margin-top: 40px; padding: 25px; background: black; color: white; border: 4px solid #333; box-shadow: 10px 10px 0px var(--sync-neon);">
+                <p class="industrial-label" style="background: white; color: black; font-size: 0.6rem;">Identity_Dossier</p>
+                <p style="font-weight: 950; font-size: 1.2rem; margin: 15px 0 5px;">{{ user.userprofile.full_name|default:user.username }}</p>
+                <p style="font-weight: 800; font-size: 0.7rem; color: var(--sync-neon);">Sector: {{ user.userprofile.office_location|default:"NOT_ASSIGNED" }}</p>
+            </div>
+        </div>
+
     </div>
 </div>
+
 {% endblock %}

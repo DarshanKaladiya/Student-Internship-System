@@ -1,0 +1,56 @@
+{% extends 'management/base.html' %}
+{% block content %}
+
+<div style="display: flex; justify-content: center; align-items: center; min-height: 90vh; padding: 40px 20px;">
+    <div class="brutalist-card" style="width: 100%; max-width: 800px; background: white; border: 4px solid black; padding: 40px; border-radius: 30px; box-shadow: 15px 15px 0px black;">
+        
+        <div style="text-align: center; margin-bottom: 40px;">
+            <div style="background: var(--sync-neon); color: black; display: inline-block; padding: 8px 20px; border: 3px solid black; transform: rotate(-1deg); font-weight: 950; text-transform: uppercase;">
+                PROFILE_CONFIG_TERMINAL
+            </div>
+            <h1 style="font-size: 3rem; font-weight: 950; margin-top: 20px; letter-spacing: -2px; text-transform: uppercase;">Edit_Identity</h1>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 25px;">
+                <div style="position: relative;">
+                    <label class="industrial-label">Full_Name</label>
+                    <input type="text" name="full_name" value="{{ profile.full_name|default:'' }}" style="width: 100%; border: 3px solid black; padding: 15px; border-radius: 12px; font-weight: 800; box-sizing: border-box;">
+                </div>
+                <div style="position: relative;">
+                    <label class="industrial-label">Contact_Number</label>
+                    <input type="text" name="phone_number" value="{{ profile.phone_number|default:'' }}" style="width: 100%; border: 3px solid black; padding: 15px; border-radius: 12px; font-weight: 800; box-sizing: border-box;">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 25px;">
+                <div style="position: relative;">
+                    <label class="industrial-label">Office_Location</label>
+                    <input type="text" name="office_location" value="{{ profile.office_location|default:'' }}" style="width: 100%; border: 3px solid black; padding: 15px; border-radius: 12px; font-weight: 800; box-sizing: border-box;">
+                </div>
+                <div style="position: relative;">
+                    <label class="industrial-label">Research_Interests</label>
+                    <input type="text" name="research_interest" value="{{ profile.research_interest|default:'' }}" style="width: 100%; border: 3px solid black; padding: 15px; border-radius: 12px; font-weight: 800; box-sizing: border-box;">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <label class="industrial-label" style="background: #3b82f6; color: white;">External_Profile_Link</label>
+                <input type="url" name="external_link" value="{{ profile.external_link|default:'' }}" placeholder="https://..." style="width: 100%; border: 3px solid #3b82f6; padding: 15px; border-radius: 12px; font-weight: 800; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <label class="industrial-label">Identity_Log (Bio)</label>
+                <textarea name="bio" rows="4" style="width: 100%; border: 3px solid black; padding: 15px; border-radius: 12px; font-weight: 800; font-family: inherit; box-sizing: border-box;">{{ profile.bio|default:'' }}</textarea>
+            </div>
+
+            <button type="submit" class="sync-btn" style="width: 100%; padding: 22px; background: black; color: white; font-size: 1.2rem; cursor: pointer; border-radius: 15px; font-weight: 900; text-transform: uppercase;">
+                Update_Parameters
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

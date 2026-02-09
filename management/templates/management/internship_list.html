@@ -1,72 +1,33 @@
 {% extends 'management/base.html' %}
 {% block content %}
-
-<style>
-    .btn-filter:hover { background-color: #333 !important; transform: translate(-2px, -2px); box-shadow: 6px 6px 0px black !important; }
-    .btn-clear:hover { background-color: #f3f4f6 !important; transform: translate(-2px, -2px); box-shadow: 6px 6px 0px black !important; }
-    
-    /* Hover Effects for the Blue Button */
-    .btn-apply-blue:hover {
-        background-color: #3b82f6 !important;
-        transform: translate(-2px, -2px);
-        box-shadow: 8px 8px 0px black !important;
-    }
-
-    .brutalist-btn { transition: all 0.1s ease-in-out; }
-</style>
-
-<div class="dashboard-container" style="max-width: 1200px; margin: 0 auto;">
-
+<div style="max-width: 1300px; margin: 0 auto; padding: 60px 20px;">
     <div style="margin-bottom: 50px;">
-        <h1 class="main-header">ACTIVE<br><span class="highlight-blue">INTERNSHIP NODES</span></h1>
-        
-        <form method="GET" action="{% url 'internship_list' %}" style="margin-top: 30px; display: flex; gap: 15px;">
-            <input type="text" name="q" placeholder="Search by Skills, Major, or Company..." 
-                   value="{{ query|default:'' }}"
-                   style="flex-grow: 1; padding: 15px; border: 3px solid black; font-weight: 700; font-family: inherit; font-size: 1.1rem;">
-            
-            <button type="submit" class="brutalist-btn btn-filter"
-                    style="padding: 15px 30px; background: black; color: white; border: 3px solid black; font-weight: 900; cursor: pointer; text-transform: uppercase; box-shadow: 4px 4px 0px black;">
-                FILTER NODES
-            </button>
-
-            {% if query %}
-                <a href="{% url 'internship_list' %}" class="brutalist-btn btn-clear"
-                   style="padding: 15px 30px; border: 3px solid black; background: white; color: black; text-decoration: none; font-weight: 900; box-shadow: 4px 4px 0px black; text-transform: uppercase;">
-                    CLEAR
-                </a>
-            {% endif %}
+        <h1 style="font-size: 4rem; font-weight: 950; letter-spacing: -3px;">AVAILABLE_NODES</h1>
+        <form method="GET" style="display: flex; gap: 15px;">
+            <input type="text" name="q" value="{{ query }}" placeholder="SCAN BY SKILLS OR TITLES..." 
+                   style="flex: 1; border: 4px solid black; padding: 20px; border-radius: 15px; font-weight: 800; font-size: 1.1rem; box-shadow: 6px 6px 0px var(--sync-blue);">
+            <button type="submit" class="sync-btn">Run_Scan</button>
         </form>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr; gap: 30px;">
-        {% for internship in internships %}
-            <div class="workspace-card" style="padding: 40px; border: 4px solid black; box-shadow: 12px 12px 0px black; background: white;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div>
-                        <h2 style="margin: 0; font-size: 2.2rem; font-weight: 900; letter-spacing: -1px;">{{ internship.title }}</h2>
-                        <p style="margin: 10px 0; font-weight: 800; color: #4a90e2; text-transform: uppercase;">
-                            {{ internship.company_name }} | {{ internship.location }}
-                        </p>
-                    </div>
-                    <div style="text-align: right;">
-                        <p style="margin: 0; font-weight: 900; font-size: 1.4rem;">{{ internship.stipend }}</p>
-                        <p style="margin: 5px 0 0; font-size: 0.8rem; color: #ef4444; font-weight: 900;">DEADLINE: {{ internship.deadline }}</p>
-                    </div>
-                </div>
-
-                <div style="margin-top: 25px; border-top: 2px solid #eee; padding-top: 20px;">
-                    <p style="font-weight: 900; font-size: 0.75rem; color: #9ca3af; text-transform: uppercase; margin-bottom: 8px;">Required Skills</p>
-                    <p style="font-weight: 700; font-size: 1.1rem;">{{ internship.required_skills }}</p>
-                </div>
-
-                <div style="margin-top: 35px;">
-                    <a href="{% url 'internship_detail' internship.pk %}" class="brutalist-btn btn-apply-blue"
-                       style="display: inline-block; padding: 18px 45px; background: #2563eb; color: white; border: 3px solid black; text-decoration: none; font-weight: 900; font-size: 1rem; text-transform: uppercase; box-shadow: 6px 6px 0px black;">
-                        APPLY NOW →
-                    </a>
-                </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 40px;">
+        {% for node in internships %}
+        <div class="brutalist-card" style="position: relative;">
+            {% if node.external_apply_link %}
+            <div style="position: absolute; top: -15px; right: 20px; background: var(--sync-neon); border: 3px solid black; padding: 5px 15px; font-weight: 900; transform: rotate(3deg); font-size: 0.8rem;">EXT_SIGNAL_REQUIRED</div>
+            {% endif %}
+            
+            <p class="industrial-label">Sector: {{ node.location }}</p>
+            <h2 style="font-size: 2.2rem; font-weight: 950; margin: 15px 0; line-height: 1;">{{ node.title }}</h2>
+            <p style="font-weight: 800; color: var(--sync-blue); margin-bottom: 20px;">{{ node.company_name }}</p>
+            
+            <div style="background: #f1f5f9; padding: 20px; border-radius: 12px; border: 2px solid black;">
+                <p class="industrial-label" style="background: #ccc; color: black; font-size: 0.6rem;">Required_Arsenal</p>
+                <p style="font-weight: 800; margin: 10px 0 0;">{{ node.required_skills }}</p>
             </div>
+
+            <a href="{% url 'internship_detail' node.pk %}" class="sync-btn" style="display: block; text-align: center; margin-top: 30px; background: var(--sync-border);">Scan_Specifications →</a>
+        </div>
         {% endfor %}
     </div>
 </div>

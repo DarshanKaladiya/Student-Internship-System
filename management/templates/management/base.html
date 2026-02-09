@@ -3,53 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internly | Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>INTERNLY // SYNC_SYSTEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --sync-blue: #4285f4;
+            --sync-neon: #ccff00;
+            --sync-red: #ef4444;
+            --sync-bg: #f0f2f5;
+            --sync-border: #000000;
+        }
+
+        /* Industrial Background */
+        body {
+            background-color: var(--sync-bg);
+            background-image: radial-gradient(var(--sync-border) 0.8px, transparent 0.8px);
+            background-size: 24px 24px;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            color: var(--sync-border);
+        }
+
+        /* Neubrutalist Card Base */
+        .brutalist-card {
+            background: white;
+            border: 4px solid var(--sync-border);
+            border-radius: 30px;
+            box-shadow: 12px 12px 0px var(--sync-border);
+            padding: 40px;
+        }
+
+        /* System Category Labels */
+        .industrial-label {
+            display: inline-block;
+            background: var(--sync-border);
+            color: white;
+            padding: 6px 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            letter-spacing: 1px;
+        }
+
+        /* High-Impact Sync Buttons */
+        .sync-btn {
+            background: var(--sync-blue);
+            color: white;
+            border: 4px solid var(--sync-border);
+            padding: 18px 32px;
+            border-radius: 15px;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-decoration: none;
+            box-shadow: 6px 6px 0px var(--sync-border);
+            transition: all 0.1s;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .sync-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px var(--sync-border);
+        }
+
+        .sync-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0px var(--sync-border);
+        }
+
+        /* NAVIGATION HUB */
+        nav {
+            background: white;
+            border-bottom: 4px solid var(--sync-border);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-link {
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            color: var(--sync-border);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--sync-blue);
+        }
+
+        /* Live Pulse Indicator */
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+            animation: pulse-animation 2s infinite;
+        }
+
+        @keyframes pulse-animation {
+            0% { box-shadow: 0 0 0 0px rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0px rgba(16, 185, 129, 0); }
+        }
+    </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <a href="{% if user.is_authenticated %}{% if user.userprofile.role == 'FACULTY' %}{% url 'faculty_dashboard' %}{% else %}{% url 'student_dashboard' %}{% endif %}{% else %}{% url 'home_landing' %}{% endif %}" class="brand-text">INTERNLY</a>
-        <nav>
-            {% if not user.is_authenticated %}
-                <a href="{% url 'home_landing' %}" class="nav-item">SYSTEM HOME</a>
-                <div class="sidebar-label">ACCESS PORTAL</div>
-                <a href="{% url 'login' %}" class="nav-item">LOGIN PORTAL</a>
-                <a href="{% url 'register' %}" class="nav-item">STUDENT JOIN</a>
-                <a href="{% url 'faculty_register' %}" class="nav-item">FACULTY JOIN</a>
-            {% else %}
-                <div class="sidebar-label">ACTIVE WORKSPACE</div>
-                <a href="{% url 'internship_list' %}" class="nav-item">ACTIVE NODES</a>
-                {% if user.userprofile.role == 'FACULTY' %}
-                    <a href="{% url 'faculty_dashboard' %}" class="nav-item">COMMAND BOARD</a>
-                    <a href="{% url 'post_internship' %}" class="nav-item">POST NEW NODE</a>
-                {% else %}
-                    <a href="{% url 'student_dashboard' %}" class="nav-item">IDENTITY HUB</a>
-                {% endif %}
-                <a href="{% url 'logout' %}" class="nav-item" style="color: #ef4444; margin-top: 20px;">EXIT SYSTEM</a>
-            {% endif %}
-        </nav>
-    </aside>
 
-    <main class="main-content">
-        <div class="content-wrapper">
-            {% block content %}{% endblock %}
+    <nav>
+        <a href="{% url 'home_landing' %}" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+            <div style="font-weight: 950; font-size: 1.8rem; letter-spacing: -1.5px; color: var(--sync-border); text-transform: uppercase;">
+                INTERNLY<span style="color: var(--sync-blue);">_SYNC</span>
+            </div>
+        </a>
+
+        <div style="display: flex; gap: 30px; align-items: center;">
+            {% if user.is_authenticated %}
+                <div style="display: flex; align-items: center; margin-right: 20px;">
+                    <span class="pulse"></span>
+                    <span style="font-weight: 900; font-size: 0.7rem; text-transform: uppercase;">System_Online</span>
+                </div>
+
+                <a href="{% url 'internship_list' %}" class="nav-link">Node_Directory</a>
+                
+                {% if user.userprofile.role == 'FACULTY' %}
+                    <a href="{% url 'faculty_dashboard' %}" class="nav-link">Command_Board</a>
+                {% else %}
+                    <a href="{% url 'student_dashboard' %}" class="nav-link">Identity_Hub</a>
+                {% endif %}
+
+                <a href="{% url 'logout' %}" class="industrial-label" style="background: var(--sync-red); text-decoration: none; box-shadow: 4px 4px 0px var(--sync-border); border: 2px solid black;">
+                    Disconnect
+                </a>
+            {% else %}
+                <a href="{% url 'register' %}" class="nav-link">New_Registration</a>
+                <a href="{% url 'login' %}" class="industrial-label" style="background: var(--sync-border); color: white; text-decoration: none; box-shadow: 4px 4px 0px var(--sync-blue); padding: 8px 22px; border: 2px solid black;">
+                    Secure_Login
+                </a>
+            {% endif %}
         </div>
-        <footer class="contact-footer">
-            <div class="footer-column">
-                <h4 class="footer-heading">SUPPORT CENTER</h4>
-                <p>Email: support@internly.io</p>
-                <p>Location: Central Campus Node</p>
-            </div>
-            <div class="footer-column about-col">
-                <h4 class="footer-heading">ABOUT</h4>
-                <p>Internly provides a verifiable technical record for industry leaders.</p>
-                <p style="color: #10b981; font-weight: 800; margin-top: 10px; font-size: 0.7rem;">
-                    ● ALL SYSTEMS OPERATIONAL
-                </p>
-            </div>
-        </footer>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
     </main>
+
+    <footer style="padding: 50px; text-align: center; font-weight: 800; font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px;">
+        &copy; 2026 // DEPLOYED_VIA_INTERNLY_PROTOCOL
+    </footer>
+
 </body>
 </html>
