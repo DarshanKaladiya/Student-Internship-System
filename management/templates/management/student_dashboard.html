@@ -10,7 +10,7 @@
                 {{ profile.full_name|default:user.username }}<br><span style="color: var(--sync-blue); -webkit-text-stroke: 2px black;">SYSTEM_USER</span>
             </h1>
         </div>
-        <a href="{% url 'student_edit_profile' %}" class="sync-btn" style="background: var(--sync-neon); color: black;">Edit_Arsenal_Specs</a>
+        <a href="{% url 'edit_profile' %}" class="sync-btn" style="background: var(--sync-neon); color: black;">Edit_Arsenal_Specs</a>
     </div>
 
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 50px;">

@@ -104,7 +104,7 @@ def student_edit_profile(request):
         profile.save()
         messages.success(request, "PROFILE_SYNC: Dossier updated.")
         return redirect('student_dashboard')
-    return render(request, 'management/student_edit_profile.html', {'profile': profile})
+    return render(request, 'management/edit_profile.html', {'profile': profile})
 
 # --- INTERNSHIP & NODE MANAGEMENT ---
 
