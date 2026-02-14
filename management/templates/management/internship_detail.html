@@ -33,128 +33,167 @@
 
     /* Industrial Headers */
     .glitch-header {
-        font-size: 6rem;
+        font-size: 5rem;
         font-weight: 950;
         line-height: 0.8;
         margin: 0;
-        letter-spacing: -5px;
+        letter-spacing: -4px;
         text-transform: uppercase;
         color: black;
     }
 
-    /* High-Impact Buttons */
-    .sync-btn {
-        width: 100%;
-        padding: 25px;
-        background: #2563eb;
-        color: white;
-        border: 4px solid black;
-        font-weight: 900;
-        font-size: 1.5rem;
-        text-transform: uppercase;
-        border-radius: 20px;
-        box-shadow: 0px 10px 0px black;
-        cursor: pointer;
-        transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        display: block;
-        text-align: center;
-        text-decoration: none;
-    }
-
-    .sync-btn:hover {
-        transform: translate(-4px, -4px);
-        box-shadow: 4px 14px 0px black;
-        background: #1d4ed8;
-    }
-
-    .sync-btn:active {
-        transform: translate(2px, 2px);
-        box-shadow: 0px 4px 0px black;
-    }
-
     .data-label {
         display: inline-block;
-        background: black;
-        color: #ccff00; /* Neon Lime */
         padding: 5px 15px;
-        font-weight: 900;
-        font-size: 0.8rem;
+        font-weight: 950;
+        font-size: 0.75rem;
         text-transform: uppercase;
-        border-radius: 5px;
+        border: 3px solid black;
+        border-radius: 8px;
         margin-bottom: 15px;
+    }
+
+    /* THE FIXED ANCHOR DESIGN */
+    .sync-btn-external {
+        display: block;
+        width: 100%;
+        background-color: #4285f4; /* Sync Blue */
+        color: white !important;
+        text-decoration: none !important;
+        font-weight: 950;
+        font-size: 1.4rem;
+        padding: 24px;
+        border: 4px solid black;
+        border-radius: 18px;
+        /* Stacked Shadow Effect */
+        box-shadow: 0px 10px 0px black; 
+        transition: all 0.1s ease-in-out;
+        text-transform: uppercase;
+        text-align: center;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    .sync-btn-external:hover {
+        transform: translateY(2px);
+        box-shadow: 0px 8px 0px black;
+        background-color: #3367d6;
+    }
+
+    .sync-btn-external:active {
+        transform: translateY(10px);
+        box-shadow: 0px 0px 0px black;
+    }
+
+    .local-btn {
+        background-color: #adff2f;
+        color: black !important;
+    }
+
+    .protocol-footer {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 900;
+        color: #94a3b8;
+        margin-top: 20px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
     }
 </style>
 
-<div style="max-width: 1300px; margin: 0 auto; padding: 60px 20px;">
-    
-    <div style="margin-bottom: 80px; position: relative;">
-        <p style="font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: #4285f4; margin-bottom: 10px;">System Node Detection</p>
-        <h1 class="glitch-header">
-            NODE<br><span style="color: #4285f4; -webkit-text-stroke: 3px black;">SPECS</span>
-        </h1>
-        <div style="position: absolute; top: 20px; right: 0; transform: rotate(5deg); background: #ccff00; border: 3px solid black; padding: 10px 20px; font-weight: 900; box-shadow: 5px 5px 0px black;">
-            VRS. 2.0_SYNC
-        </div>
-    </div>
-
-    <div style="display: grid; grid-template-columns: 1.8fr 1fr; gap: 60px; align-items: start;">
+<div style="max-width: 1300px; margin: 60px auto; padding: 0 30px;">
+    <div style="display: grid; grid-template-columns: 1fr 400px; gap: 50px;">
         
         <div class="command-module">
-            <div class="data-label">Deployment Title</div>
-            <h2 style="font-size: 3.5rem; font-weight: 900; margin: 0; line-height: 1; text-transform: uppercase;">{{ internship.title }}</h2>
-            <p style="font-size: 1.5rem; font-weight: 800; color: #4285f4; margin: 15px 0 50px;">{{ internship.company_name|default:"TechNova Solutions" }}</p>
+            <div class="data-label" style="background: #adff2f; color: black;">Node_Active</div>
+            <h1 class="glitch-header">{{ internship.title }}</h1>
+            <p style="font-size: 1.8rem; font-weight: 800; color: #4285f4; margin: 20px 0;">@{{ internship.company_name }}</p>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 50px;">
-                <div style="background: #f8fafc; border: 3px solid black; padding: 25px; border-radius: 15px; box-shadow: 6px 6px 0px black;">
-                    <div class="data-label" style="background: #4285f4; color: white;">Target Arsenal</div>
-                    <p style="font-size: 1.4rem; font-weight: 900; margin: 0;">{{ internship.required_skills }}</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 40px 0; background: #f8fafc; padding: 30px; border: 3px solid black; border-radius: 20px;">
+                <div>
+                    <p style="font-weight: 900; color: #94a3b8; text-transform: uppercase; font-size: 0.75rem;">Credits Stipend</p>
+                    <p style="font-weight: 900; font-size: 1.5rem; margin: 0;">{{ internship.stipend|default:"Non-Paid" }}</p>
                 </div>
-                <div style="background: #f8fafc; border: 3px solid black; padding: 25px; border-radius: 15px; box-shadow: 6px 6px 0px black;">
-                    <div class="data-label" style="background: #ef4444; color: white;">Signal Deadline</div>
-                    <p style="font-size: 1.4rem; font-weight: 900; margin: 0;">{{ internship.deadline|date:"M d, Y" }}</p>
+                <div>
+                    <p style="font-weight: 900; color: #94a3b8; text-transform: uppercase; font-size: 0.75rem;">Sync Deadline</p>
+                    <p style="font-weight: 900; font-size: 1.5rem; margin: 0;">{{ internship.deadline|date:"d M Y" }}</p>
                 </div>
             </div>
 
-            <div style="margin-bottom: 60px;">
-                <div class="data-label">Mission Briefing</div>
-                <p style="font-size: 1.2rem; font-weight: 700; color: #475569; line-height: 1.8; margin-top: 15px;">
-                    {{ internship.description }}
-                </p>
+            <h3 style="font-weight: 950; text-transform: uppercase; margin-bottom: 20px;">Mission Briefing</h3>
+            <div style="font-size: 1.2rem; font-weight: 600; line-height: 1.6; color: #334155; margin-bottom: 40px;">
+                {{ internship.description|linebreaks }}
             </div>
 
-            <form method="POST" action="{% url 'apply_internship' internship.pk %}">
-                {% csrf_token %}
-                <button type="submit" class="sync-btn">
-                    {% if internship.external_apply_link %}
-                        Apply Google Form
-                    {% else %}
-                        Execute Local Deployment
-                    {% endif %}
-                </button>
-            </form>
-            <p style="text-align: center; margin-top: 20px; font-weight: 800; color: #94a3b8; font-size: 0.8rem;">SECURE TRANSMISSION PROTOCOL ENABLED</p>
+            <h3 style="font-weight: 950; text-transform: uppercase; margin-bottom: 20px;">Required Arsenal</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 50px;">
+                {% for skill in internship.required_skills.split %}
+                    <span style="background: white; border: 3px solid black; padding: 10px 20px; border-radius: 12px; font-weight: 900; box-shadow: 4px 4px 0px black;">{{ skill }}</span>
+                {% endfor %}
+            </div>
+
+            
+            <div>
+                {% if internship.external_apply_link %}
+                    <a href="{{ internship.external_apply_link }}" target="_blank" rel="noopener noreferrer" class="sync-btn-external">
+                        INITIALIZE_EXTERNAL_APPLICATION (GOOGLE FORM)
+                    </a>
+                {% else %}
+                    <form action="{% url 'apply_internship' internship.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="sync-btn-external local-btn" style="width: 100%; border: 4px solid black;">
+                            SYNC_LOCAL_APPLICATION
+                        </button>
+                    </form>
+                {% endif %}
+                <span class="protocol-footer">SECURE TRANSMISSION PROTOCOL ENABLED</span>
+            </div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 40px;">
             <div class="command-module" style="padding: 40px; box-shadow: 10px 10px 0px black;">
-                <div class="data-label" style="background: #4285f4; color: white;">Commanding Officer</div>
-                <h3 style="font-size: 2.2rem; font-weight: 900; margin: 10px 0;">{{ faculty_profile.full_name|default:internship.faculty.username }}</h3>
-                <p style="font-weight: 800; color: #10b981; font-size: 1rem; text-transform: uppercase;">{{ faculty_profile.research_interest|default:"Senior Architect" }}</p>
+                <div class="data-label" style="background: #4285f4; color: white; margin-bottom: 25px;">
+                    Commanding_Officer
+                </div>
+
+                <h3 style="font-size: 2.8rem; font-weight: 900; margin: 0; line-height: 1; text-transform: uppercase;">
+                    {{ internship.faculty.userprofile.full_name|default:internship.faculty.username }}
+                </h3>
                 
-                <hr style="border: none; border-top: 3px solid #f1f5f9; margin: 30px 0;">
-                
-                <div style="display: flex; flex-direction: column; gap: 15px;">
+                <p style="font-weight: 950; color: #10b981; font-size: 1.1rem; text-transform: uppercase; margin: 15px 0; letter-spacing: 1px;">
+                    {{ internship.faculty.userprofile.research_interest|default:"Senior_Systems_Architect" }}
+                </p>
+
+                <hr style="border: none; border-top: 3px solid #f1f5f9; margin: 25px 0;">
+
+                <div style="display: flex; flex-direction: column; gap: 25px;">
                     <div>
-                        <p style="font-weight: 900; color: #94a3b8; text-transform: uppercase; font-size: 0.7rem;">Sector Location</p>
-                        <p style="font-weight: 800; font-size: 1.1rem; margin: 0;">{{ faculty_profile.office_location|default:"Central Hub" }}</p>
+                        <p style="font-weight: 900; color: #94a3b8; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Sector_Location</p>
+                        <p style="font-weight: 800; font-size: 1.2rem; margin: 5px 0 0;">
+                            {{ internship.faculty.userprofile.office_location|default:"Marvadi University" }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p style="font-weight: 900; color: #94a3b8; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Contact_Signal</p>
+                        <p style="font-weight: 800; font-size: 1.1rem; margin: 5px 0 0; color: #4285f4;">
+                            {{ internship.faculty.email|default:"SIGNAL_ENCRYPTED" }}
+                        </p>
+                    </div>
+                    
+                    <div style="margin-top: 10px; padding: 15px; border: 3px solid black; border-radius: 15px; background: #f8fafc;">
+                        <p style="font-weight: 950; text-transform: uppercase; font-size: 0.65rem; color: #64748b; margin-bottom: 5px;">Dossier_Status</p>
+                        <p style="font-weight: 900; font-size: 0.9rem; margin: 0;">VERIFIED_INSTRUCTOR_NODE</p>
                     </div>
                 </div>
             </div>
 
-            <a href="{% url 'internship_list' %}" style="display: block; text-align: center; border: 4px solid black; padding: 22px; text-decoration: none; color: black; font-weight: 900; text-transform: uppercase; font-size: 0.9rem; border-radius: 20px; background: white; box-shadow: 7px 7px 0px black; transition: all 0.1s;">
-                ← Re-Scan Node Directory
+            <a href="{% url 'internship_list' %}" style="display: block; text-align: center; border: 4px solid black; padding: 22px; text-decoration: none; color: black; font-weight: 950; text-transform: uppercase; background: white; border-radius: 20px; box-shadow: 8px 8px 0px black; margin-top: 30px;">
+                Return to Network
             </a>
         </div>
+
     </div>
 </div>
 

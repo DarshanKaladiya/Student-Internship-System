@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from .models import UserProfile, Internship, Application
+from django.db.models import Q
+from django.utils import timezone
+from datetime import timedelta
 
 # --- AUTHENTICATION ENGINE ---
 
@@ -77,8 +80,30 @@ def faculty_dashboard(request):
 
 @login_required
 def student_dashboard(request):
-    apps = Application.objects.filter(student=request.user)
-    return render(request, 'management/student_dashboard.html', {'applications': apps})
+    profile = request.user.userprofile
+    
+    # --- FIXED: URGENT_ALERTS LOGIC ---
+    # Detects nodes with deadlines in the next 72 hours
+    threshold = timezone.now() + timedelta(days=3)
+    urgent_nodes = Internship.objects.filter(
+        deadline__gte=timezone.now(),
+        deadline__lte=threshold
+    ).order_by('deadline')
+
+    # --- FIXED: CGPA LOGIC ---
+    # Accessing the cgpa from the profile
+    current_cgpa = profile.gpa if hasattr(profile, 'cgpa') else 0.0
+
+    applications = Application.objects.filter(student=request.user)
+    
+    context = {
+        'profile': profile,
+        'applications': applications,
+        'urgent_nodes': urgent_nodes, # Logic for
+        'cgpa': current_cgpa # Logic for
+    }
+    return render(request, 'management/student_dashboard.html', context)
+    
 
 @login_required
 def faculty_edit_profile(request):
@@ -109,7 +134,14 @@ def student_edit_profile(request):
 # --- INTERNSHIP & NODE MANAGEMENT ---
 
 def internship_list(request):
-    nodes = Internship.objects.all().order_by('-created_at')
+    query = request.GET.get('q') # Captures the search input
+    if query:
+        # Filters by title or skills
+        nodes = Internship.objects.filter(
+            Q(title__icontains=query) | Q(required_skills__icontains=query)
+        ).order_by('-created_at')
+    else:
+        nodes = Internship.objects.all().order_by('-created_at')
     return render(request, 'management/internship_list.html', {'internships': nodes})
 
 def internship_detail(request, pk):
